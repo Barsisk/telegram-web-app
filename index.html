@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Форма данных - Telegram Web App</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 400px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+            background: #f8f9fa;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+        }
+        
+        input::placeholder {
+            color: #999;
+        }
+        
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+        
+        .error {
+            color: #e74c3c;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .success-message {
+            display: none;
+            text-align: center;
+            color: #27ae60;
+            font-weight: 600;
+            margin-top: 20px;
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            .header h1 {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📋 Заполните форму</h1>
+            <p>Пожалуйста, введите ваши данные</p>
+        </div>
+        
+        <form id="dataForm">
+            <div class="form-group">
+                <label for="fio">ФИО:</label>
+                <input 
+                    type="text" 
+                    id="fio" 
+                    name="fio" 
+                    required 
+                    placeholder="Иванов Иван Иванович"
+                    maxlength="100"
+                >
+                <div id="fioError" class="error">Пожалуйста, введите ФИО</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="choice">Выберите вариант:</label>
+                <select id="choice" name="choice" required>
+                    <option value="">-- Сделайте выбор --</option>
+                    <option value="1">✅ Вариант 1</option>
+                    <option value="2">✅ Вариант 2</option>
+                </select>
+                <div id="choiceError" class="error">Пожалуйста, выберите вариант</div>
+            </div>
+            
+            <button type="submit" class="submit-btn">
+                📤 Отправить данные
+            </button>
+        </form>
+        
+        <div id="successMessage" class="success-message">
+            ✅ Данные успешно отправлены!
+        </div>
+    </div>
+
+    <script>
+        // Инициализация Telegram Web App
+        const tg = window.Telegram.WebApp;
+        
+        // Расширяем Web App на весь экран
+        tg.expand();
+        
+        // Скрываем основную кнопку если она видна
+        tg.MainButton.hide();
+        
+        // Элементы формы
+        const form = document.getElementById('dataForm');
+        const fioInput = document.getElementById('fio');
+        const choiceSelect = document.getElementById('choice');
+        const fioError = document.getElementById('fioError');
+        const choiceError = document.getElementById('choiceError');
+        const successMessage = document.getElementById('successMessage');
+        
+        // Функция для проверки валидности формы
+        function validateForm() {
+            let isValid = true;
+            
+            // Проверка ФИО
+            if (!fioInput.value.trim()) {
+                fioError.style.display = 'block';
+                isValid = false;
+            } else {
+                fioError.style.display = 'none';
+            }
+            
+            // Проверка выбора
+            if (!choiceSelect.value) {
+                choiceError.style.display = 'block';
+                isValid = false;
+            } else {
+                choiceError.style.display = 'none';
+            }
+            
+            return isValid;
+        }
+        
+        // Обработчик отправки формы
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (validateForm()) {
+                // Собираем данные
+                const formData = {
+                    fio: fioInput.value.trim(),
+                    choice: choiceSelect.value
+                };
+                
+                // Показываем сообщение об успехе
+                successMessage.style.display = 'block';
+                form.style.display = 'none';
+                
+                // Ждем немного перед отправкой для UX
+                setTimeout(() => {
+                    // Отправляем данные в Telegram бот
+                    tg.sendData(JSON.stringify(formData));
+                    
+                    // Закрываем Web App
+                    tg.close();
+                }, 1500);
+            }
+        });
+        
+        // Дополнительные обработчики для улучшения UX
+        fioInput.addEventListener('input', function() {
+            if (fioInput.value.trim()) {
+                fioError.style.display = 'none';
+            }
+        });
+        
+        choiceSelect.addEventListener('change', function() {
+            if (choiceSelect.value) {
+                choiceError.style.display = 'none';
+            }
+        });
+        
+        // Обработчик на случай, если пользователь закроет Web App
+        tg.onEvent('viewportChanged', function() {
+            if (!tg.isExpanded) {
+                tg.close();
+            }
+        });
+    </script>
+</body>
+</html>
