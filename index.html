@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Форма данных - Telegram Web App</title>
+    <title>Форма данных</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         * {
@@ -14,85 +14,76 @@
         
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #f5f5f5;
             min-height: 100vh;
+            padding: 20px;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px;
         }
         
         .container {
             background: white;
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             width: 100%;
             max-width: 400px;
         }
         
         .header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
         }
         
         .header h1 {
             color: #333;
-            font-size: 24px;
-            margin-bottom: 10px;
+            font-size: 20px;
+            margin-bottom: 5px;
         }
         
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
         
         label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 5px;
             color: #333;
-            font-weight: 600;
-            font-size: 14px;
+            font-weight: 500;
         }
         
         input, select {
             width: 100%;
-            padding: 15px;
-            border: 2px solid #e1e5e9;
-            border-radius: 10px;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
             font-size: 16px;
-            transition: border-color 0.3s ease;
-            background: #f8f9fa;
-        }
-        
-        input:focus, select:focus {
-            outline: none;
-            border-color: #667eea;
             background: white;
         }
         
         .submit-btn {
             width: 100%;
-            padding: 15px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 12px;
+            background: #007bff;
             color: white;
             border: none;
-            border-radius: 1010px;
+            border-radius: 6px;
             font-size: 16px;
-            font-weight: 600;
             cursor: pointer;
         }
         
         .error {
-            color: #e74c3c;
+            color: #dc3545;
             font-size: 12px;
             margin-top: 5px;
             display: none;
         }
         
         .loading {
-            display: none;
             text-align: center;
-            margin-top: 20px;
+            padding: 20px;
+            display: none;
         }
     </style>
 </head>
@@ -118,7 +109,7 @@
             <div class="form-group">
                 <label for="choice">Выберите вариант:</label>
                 <select id="choice" name="choice" required>
-                    <option value="">-- Сделайте выбор --</option>
+                    <option value="">-- Выберите --</option>
                     <option value="1">Вариант 1</option>
                     <option value="2">Вариант 2</option>
                 </select>
@@ -126,7 +117,7 @@
             </div>
             
             <button type="submit" class="submit-btn">
-                📤 Отправить данные
+                Отправить
             </button>
         </form>
         
@@ -136,33 +127,45 @@
     </div>
 
     <script>
-        // Инициализация Telegram Web App
-        let tg;
-        
-        try {
-            tg = window.Telegram.WebApp;
-            
-            // Инициализация WebApp
-            tg.ready();
-            tg.expand();
-            
-            // Скрываем кнопку назад если она есть
-            if (tg.BackButton) {
-                tg.BackButton.hide();
+        // Безопасная инициализация Telegram WebApp
+        function initTelegramWebApp() {
+            try {
+                // Проверяем, что находимся в Telegram WebApp
+                if (window.Telegram && window.Telegram.WebApp) {
+                    const tg = window.Telegram.WebApp;
+                    
+                    // Устанавливаем обработчики ошибок
+                    window.addEventListener('error', function(e) {
+                        console.error('Global error:', e.error);
+                    });
+                    
+                    // Инициализируем WebApp
+                    tg.ready();
+                    
+                    // Настройка внешнего вида
+                    tg.expand();
+                    tg.enableClosingConfirmation();
+                    
+                    // Скрываем ненужные элементы
+                    if (tg.MainButton) {
+                        tg.MainButton.hide();
+                    }
+                    
+                    if (tg.BackButton) {
+                        tg.BackButton.hide();
+                    }
+                    
+                    console.log('Telegram WebApp инициализирован');
+                    return tg;
+                }
+            } catch (error) {
+                console.warn('Telegram WebApp не доступен:', error);
             }
-            
-            // Скрываем основную кнопку
-            if (tg.MainButton) {
-                tg.MainButton.hide();
-            }
-            
-            console.log("Telegram WebApp инициализирован успешно");
-            
-        } catch (error) {
-            console.error("Ошибка инициализации Telegram WebApp:", error);
-            // Продолжаем работу даже если WebApp не инициализирован
-            // (для тестирования в браузере)
+            return null;
         }
+        
+        // Инициализируем при загрузке
+        const tg = initTelegramWebApp();
         
         // Элементы формы
         const form = document.getElementById('dataForm');
@@ -172,21 +175,18 @@
         const choiceError = document.getElementById('choiceError');
         const loading = document.getElementById('loading');
         
-        // Функция для проверки валидности формы
+        // Функция валидации
         function validateForm() {
             let isValid = true;
             
-            // Сбрасываем ошибки
             fioError.style.display = 'none';
             choiceError.style.display = 'none';
             
-            // Проверка ФИО
             if (!fioInput.value.trim()) {
                 fioError.style.display = 'block';
                 isValid = false;
             }
             
-            // Проверка выбора
             if (!choiceSelect.value) {
                 choiceError.style.display = 'block';
                 isValid = false;
@@ -200,49 +200,43 @@
             e.preventDefault();
             
             if (validateForm()) {
-                // Показываем загрузку
                 form.style.display = 'none';
                 loading.style.display = 'block';
                 
-                // Собираем данные
                 const formData = {
                     fio: fioInput.value.trim(),
                     choice: choiceSelect.value
                 };
                 
-                console.log("Отправляемые данные:", formData);
-                
-                // Ждем немного перед отправкой для UX
-                setTimeout(() => {
+                // Отправляем данные с задержкой
+                setTimeout(function() {
                     try {
-                        if (tg && tg.sendData) {
-                            // Отправляем данные в Telegram бот
+                        if (tg && typeof tg.sendData === 'function') {
                             tg.sendData(JSON.stringify(formData));
-                            console.log("Данные отправлены через Telegram WebApp");
                         } else {
-                            // Для тестирования в браузере
-                            console.log("Данные для отправки:", formData);
-                            alert("Данные готовы к отправке: " + JSON.stringify(formData));
+                            // Для тестирования вне Telegram
+                            console.log('Данные для отправки:', formData);
+                            alert('Данные: ' + JSON.stringify(formData));
                         }
                         
-                        // Закрываем Web App
-                        if (tg && tg.close) {
-                            tg.close();
+                        // Закрываем WebApp
+                        if (tg && typeof tg.close === 'function') {
+                            setTimeout(function() {
+                                tg.close();
+                            }, 100);
                         }
                         
                     } catch (error) {
-                        console.error("Ошибка при отправке данных:", error);
-                        alert("Ошибка отправки: " + error.message);
-                        
-                        // Показываем форму снова
+                        console.error('Ошибка отправки:', error);
+                        // Восстанавливаем форму при ошибке
                         form.style.display = 'block';
                         loading.style.display = 'none';
                     }
-                }, 1000);
+                }, 500);
             }
         });
         
-        // Обработчики для сброса ошибок при вводе
+        // Сброс ошибок при вводе
         fioInput.addEventListener('input', function() {
             fioError.style.display = 'none';
         });
@@ -251,12 +245,15 @@
             choiceError.style.display = 'none';
         });
         
-        // Для отладки: выводим информацию о WebApp
-        if (tg) {
-            console.log("WebApp version:", tg.version);
-            console.log("Platform:", tg.platform);
-            console.log("Theme:", tg.themeParams);
-        }
+        // Предотвращаем возможные ошибки загрузки
+        window.addEventListener('load', function() {
+            console.log('Страница полностью загружена');
+        });
+        
+        // Обработчик ошибок ресурсов
+        window.addEventListener('error', function(e) {
+            console.warn('Ошибка загрузки ресурса:', e);
+        }, true);
     </script>
 </body>
 </html>
