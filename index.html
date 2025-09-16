@@ -42,11 +42,6 @@
             margin-bottom: 10px;
         }
         
-        .header p {
-            color: #666;
-            font-size: 14px;
-        }
-        
         .form-group {
             margin-bottom: 20px;
         }
@@ -75,29 +70,16 @@
             background: white;
         }
         
-        input::placeholder {
-            color: #999;
-        }
-        
         .submit-btn {
             width: 100%;
             padding: 15px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
-            border-radius: 10px;
+            border-radius: 1010px;
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            transition: transform 0.2s ease;
-        }
-        
-        .submit-btn:hover {
-            transform: translateY(-2px);
-        }
-        
-        .submit-btn:active {
-            transform: translateY(0);
         }
         
         .error {
@@ -107,23 +89,10 @@
             display: none;
         }
         
-        .success-message {
+        .loading {
             display: none;
             text-align: center;
-            color: #27ae60;
-            font-weight: 600;
             margin-top: 20px;
-        }
-        
-        @media (max-width: 480px) {
-            .container {
-                padding: 20px;
-                margin: 10px;
-            }
-            
-            .header h1 {
-                font-size: 20px;
-            }
         }
     </style>
 </head>
@@ -131,7 +100,6 @@
     <div class="container">
         <div class="header">
             <h1>📋 Заполните форму</h1>
-            <p>Пожалуйста, введите ваши данные</p>
         </div>
         
         <form id="dataForm">
@@ -143,7 +111,6 @@
                     name="fio" 
                     required 
                     placeholder="Иванов Иван Иванович"
-                    maxlength="100"
                 >
                 <div id="fioError" class="error">Пожалуйста, введите ФИО</div>
             </div>
@@ -152,8 +119,8 @@
                 <label for="choice">Выберите вариант:</label>
                 <select id="choice" name="choice" required>
                     <option value="">-- Сделайте выбор --</option>
-                    <option value="1">✅ Вариант 1</option>
-                    <option value="2">✅ Вариант 2</option>
+                    <option value="1">Вариант 1</option>
+                    <option value="2">Вариант 2</option>
                 </select>
                 <div id="choiceError" class="error">Пожалуйста, выберите вариант</div>
             </div>
@@ -163,20 +130,39 @@
             </button>
         </form>
         
-        <div id="successMessage" class="success-message">
-            ✅ Данные успешно отправлены!
+        <div id="loading" class="loading">
+            ⏳ Отправка данных...
         </div>
     </div>
 
     <script>
         // Инициализация Telegram Web App
-        const tg = window.Telegram.WebApp;
+        let tg;
         
-        // Расширяем Web App на весь экран
-        tg.expand();
-        
-        // Скрываем основную кнопку если она видна
-        tg.MainButton.hide();
+        try {
+            tg = window.Telegram.WebApp;
+            
+            // Инициализация WebApp
+            tg.ready();
+            tg.expand();
+            
+            // Скрываем кнопку назад если она есть
+            if (tg.BackButton) {
+                tg.BackButton.hide();
+            }
+            
+            // Скрываем основную кнопку
+            if (tg.MainButton) {
+                tg.MainButton.hide();
+            }
+            
+            console.log("Telegram WebApp инициализирован успешно");
+            
+        } catch (error) {
+            console.error("Ошибка инициализации Telegram WebApp:", error);
+            // Продолжаем работу даже если WebApp не инициализирован
+            // (для тестирования в браузере)
+        }
         
         // Элементы формы
         const form = document.getElementById('dataForm');
@@ -184,26 +170,26 @@
         const choiceSelect = document.getElementById('choice');
         const fioError = document.getElementById('fioError');
         const choiceError = document.getElementById('choiceError');
-        const successMessage = document.getElementById('successMessage');
+        const loading = document.getElementById('loading');
         
         // Функция для проверки валидности формы
         function validateForm() {
             let isValid = true;
             
+            // Сбрасываем ошибки
+            fioError.style.display = 'none';
+            choiceError.style.display = 'none';
+            
             // Проверка ФИО
             if (!fioInput.value.trim()) {
                 fioError.style.display = 'block';
                 isValid = false;
-            } else {
-                fioError.style.display = 'none';
             }
             
             // Проверка выбора
             if (!choiceSelect.value) {
                 choiceError.style.display = 'block';
                 isValid = false;
-            } else {
-                choiceError.style.display = 'none';
             }
             
             return isValid;
@@ -214,46 +200,63 @@
             e.preventDefault();
             
             if (validateForm()) {
+                // Показываем загрузку
+                form.style.display = 'none';
+                loading.style.display = 'block';
+                
                 // Собираем данные
                 const formData = {
                     fio: fioInput.value.trim(),
                     choice: choiceSelect.value
                 };
                 
-                // Показываем сообщение об успехе
-                successMessage.style.display = 'block';
-                form.style.display = 'none';
+                console.log("Отправляемые данные:", formData);
                 
                 // Ждем немного перед отправкой для UX
                 setTimeout(() => {
-                    // Отправляем данные в Telegram бот
-                    tg.sendData(JSON.stringify(formData));
-                    
-                    // Закрываем Web App
-                    tg.close();
-                }, 1500);
+                    try {
+                        if (tg && tg.sendData) {
+                            // Отправляем данные в Telegram бот
+                            tg.sendData(JSON.stringify(formData));
+                            console.log("Данные отправлены через Telegram WebApp");
+                        } else {
+                            // Для тестирования в браузере
+                            console.log("Данные для отправки:", formData);
+                            alert("Данные готовы к отправке: " + JSON.stringify(formData));
+                        }
+                        
+                        // Закрываем Web App
+                        if (tg && tg.close) {
+                            tg.close();
+                        }
+                        
+                    } catch (error) {
+                        console.error("Ошибка при отправке данных:", error);
+                        alert("Ошибка отправки: " + error.message);
+                        
+                        // Показываем форму снова
+                        form.style.display = 'block';
+                        loading.style.display = 'none';
+                    }
+                }, 1000);
             }
         });
         
-        // Дополнительные обработчики для улучшения UX
+        // Обработчики для сброса ошибок при вводе
         fioInput.addEventListener('input', function() {
-            if (fioInput.value.trim()) {
-                fioError.style.display = 'none';
-            }
+            fioError.style.display = 'none';
         });
         
         choiceSelect.addEventListener('change', function() {
-            if (choiceSelect.value) {
-                choiceError.style.display = 'none';
-            }
+            choiceError.style.display = 'none';
         });
         
-        // Обработчик на случай, если пользователь закроет Web App
-        tg.onEvent('viewportChanged', function() {
-            if (!tg.isExpanded) {
-                tg.close();
-            }
-        });
+        // Для отладки: выводим информацию о WebApp
+        if (tg) {
+            console.log("WebApp version:", tg.version);
+            console.log("Platform:", tg.platform);
+            console.log("Theme:", tg.themeParams);
+        }
     </script>
 </body>
 </html>
