@@ -28,28 +28,26 @@
     </div>
 
     <script>
-        // Проверка, что страница открыта в Telegram Web App
-        function isTelegramWebApp() {
-            return typeof window.Telegram !== 'undefined' && 
-                   typeof window.Telegram.WebApp !== 'undefined' &&
-                   window.Telegram.WebApp.initData !== '';
-        }
-
-        // Инициализация приложения
         function initApp() {
-            if (!isTelegramWebApp()) {
-                // Показываем сообщение об ошибке для прямого доступа
+            if (typeof window.Telegram === 'undefined' || typeof window.Telegram.WebApp === 'undefined') {
                 document.getElementById('form-container').style.display = 'none';
                 document.getElementById('access-denied').style.display = 'block';
                 return;
             }
-
-            // Инициализация Telegram Web App
+    
             let tg = window.Telegram.WebApp;
+            
+            if (tg.platform === 'unknown') {
+                document.getElementById('form-container').style.display = 'none';
+                document.getElementById('access-denied').style.display = 'block';
+                return;
+            }
+    
             tg.expand();
             tg.MainButton.hide();
             
-            // Остальной код инициализации...
+            console.log('Successfully initialized in Telegram');
+            
             const form = document.getElementById('certificateForm');
             const certificateType = document.getElementById('certificateType');
             const periodContainer = document.getElementById('periodContainer');
@@ -58,7 +56,6 @@
             const successMessage = document.getElementById('successMessage');
             const fullNameExample = document.getElementById('fullNameExample');
             
-            // Получить ФИО из initData
             function getFullNameFromInitData() {
                 try {
                     const initData = new URLSearchParams(tg.initData);
@@ -75,7 +72,6 @@
                 return null;
             }
 
-            // Автозаполнение данных
             function prefillFormData() {
                 const fullName = getFullNameFromInitData();
                 
