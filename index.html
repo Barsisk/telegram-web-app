@@ -107,6 +107,12 @@
         .success.visible {
             display: block;
         }
+        
+        .example {
+            color: var(--tg-theme-hint-color, #999999);
+            font-size: 12px;
+            margin-top: 4px;
+        }
     </style>
 </head>
 <body>
@@ -116,7 +122,8 @@
         <form id="certificateForm">
             <div class="form-group">
                 <label for="fullName">ФИО:</label>
-                <input type="text" id="fullName" required>
+                <input type="text" id="fullName" required placeholder="Введите ваше ФИО">
+                <div class="example" id="fullNameExample">Пример: Иванов Иван Иванович</div>
                 <div class="error" id="fullNameError">Поле ФИО обязательно для заполнения</div>
             </div>
             
@@ -133,7 +140,7 @@
             
             <div class="form-group">
                 <label for="groupName">Название группы:</label>
-                <input type="text" id="groupName" required>
+                <input type="text" id="groupName" required placeholder="Например: ИСП-21">
                 <div class="error" id="groupNameError">Поле группы обязательно для заполнения</div>
             </div>
             
@@ -188,6 +195,18 @@
         const quantityInput = document.getElementById('quantity');
         const submitBtn = document.getElementById('submitBtn');
         const successMessage = document.getElementById('successMessage');
+        const fullNameExample = document.getElementById('fullNameExample');
+        
+        // Получить ФИО из URL параметров
+        function getFullNameFromURL() {
+            const pathParts = window.location.pathname.split('/');
+            const fullNameParam = pathParts[pathParts.length - 2]; // Предпоследний элемент пути
+            
+            if (fullNameParam && fullNameParam !== 'None' && fullNameParam !== 'undefined') {
+                return decodeURIComponent(fullNameParam);
+            }
+            return null;
+        }
         
         // Показать/скрыть поля периода для стипендии
         certificateType.addEventListener('change', function() {
@@ -205,10 +224,16 @@
             if (value > 5) this.value = 5;
         });
         
-        // Автозаполнение ФИО из данных пользователя
-        function prefillUserData() {
+        // Автозаполнение данных
+        function prefillFormData() {
+            const fullNameFromURL = getFullNameFromURL();
             const user = tg.initDataUnsafe?.user;
-            if (user) {
+            
+            // Приоритет: ФИО из URL, затем из данных Telegram
+            if (fullNameFromURL) {
+                document.getElementById('fullName').value = fullNameFromURL;
+                fullNameExample.style.display = 'none';
+            } else if (user) {
                 let fullName = '';
                 if (user.last_name && user.first_name) {
                     fullName = `${user.last_name} ${user.first_name}`;
@@ -220,6 +245,7 @@
                 
                 if (fullName) {
                     document.getElementById('fullName').value = fullName;
+                    fullNameExample.style.display = 'none';
                 }
             }
         }
@@ -290,6 +316,7 @@
             
             const formData = {
                 user_id: tg.initDataUnsafe?.user?.id || 0,
+                username: tg.initDataUnsafe?.user?.username || 'N/A',
                 full_name: document.getElementById('fullName').value.trim(),
                 building: document.getElementById('building').value,
                 group_name: document.getElementById('groupName').value.trim(),
@@ -326,7 +353,7 @@
         
         // Инициализация при загрузке
         document.addEventListener('DOMContentLoaded', function() {
-            prefillUserData();
+            prefillFormData();
             
             // Устанавливаем текущую дату как значение по умолчанию для периода
             const today = new Date().toISOString().split('T')[0];
