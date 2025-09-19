@@ -6,19 +6,12 @@
     <title>Заказ справки</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        :root {
-            --tg-theme-bg-color: #ffffff;
-            --tg-theme-text-color: #222222;
-            --tg-theme-button-color: #40a7e3;
-            --tg-theme-button-text-color: #ffffff;
-        }
-        
         body {
-            background-color: var(--tg-theme-bg-color);
-            color: var(--tg-theme-text-color);
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            padding: 16px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: var(--tg-theme-bg-color, #ffffff);
+            color: var(--tg-theme-text-color, #222222);
             margin: 0;
+            padding: 16px;
         }
         
         .container {
@@ -27,8 +20,10 @@
         }
         
         h1 {
+            font-size: 20px;
             text-align: center;
-            margin-bottom: 24px;
+            margin-bottom: 20px;
+            color: var(--tg-theme-text-color, #222222);
         }
         
         .form-group {
@@ -37,62 +32,46 @@
         
         label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             font-weight: 500;
         }
         
         input, select {
             width: 100%;
             padding: 12px;
-            border: 1px solid #ddd;
+            border: 1px solid var(--tg-theme-hint-color, #999999);
             border-radius: 10px;
+            background-color: var(--tg-theme-bg-color, #ffffff);
+            color: var(--tg-theme-text-color, #222222);
             font-size: 16px;
             box-sizing: border-box;
         }
         
-        #periodContainer {
-            display: none;
-        }
-        
-        .period-inputs {
-            display: flex;
-            gap: 12px;
-        }
-        
-        .period-inputs input {
-            flex: 1;
+        .optional {
+            color: var(--tg-theme-hint-color, #999999);
+            font-size: 12px;
+            margin-top: 4px;
         }
         
         button {
-            background-color: var(--tg-theme-button-color);
-            color: var(--tg-theme-button-text-color);
+            background-color: var(--tg-theme-button-color, #2481cc);
+            color: var(--tg-theme-button-text-color, #ffffff);
             border: none;
-            padding: 12px 24px;
             border-radius: 10px;
+            padding: 12px 20px;
             font-size: 16px;
             font-weight: 500;
             cursor: pointer;
             width: 100%;
-            margin-top: 20px;
+            margin-top: 16px;
         }
         
-        .test-button {
-            background-color: #888;
-            margin-top: 10px;
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
         }
         
-        .error {
-            color: #ff3333;
-            font-size: 14px;
-            margin-top: 4px;
-            display: none;
-        }
-        
-        .test-info {
-            background-color: #f0f0f0;
-            padding: 10px;
-            border-radius: 8px;
-            margin-top: 20px;
+        .hidden {
             display: none;
         }
     </style>
@@ -104,184 +83,106 @@
         <form id="orderForm">
             <div class="form-group">
                 <label for="fullname">ФИО</label>
-                <input type="text" id="fullname" placeholder="Введите ваше ФИО" required>
-                <div class="error" id="fullnameError">Поле ФИО обязательно</div>
+                <input type="text" id="fullname" placeholder="Например: Иванов Иван Иванович" required>
+                <div class="optional">Если оставить пустым, будет использовано имя из Telegram</div>
             </div>
             
             <div class="form-group">
                 <label for="building">Корпус</label>
                 <select id="building" required>
                     <option value="">Выберите корпус</option>
-                    <option value="Главный">Главный</option>
-                    <option value="Первый">Первый</option>
-                    <option value="Второй">Второй</option>
+                    <option value="Главный">Главный корпус</option>
+                    <option value="Первый">Первый корпус</option>
+                    <option value="Второй">Второй корпус</option>
                 </select>
-                <div class="error" id="buildingError">Выберите корпус</div>
             </div>
             
             <div class="form-group">
                 <label for="group">Название группы</label>
-                <input type="text" id="group" placeholder="Введите название группы" required>
-                <div class="error" id="groupError">Поле группы обязательно</div>
+                <input type="text" id="group" placeholder="Например: ИСП-21" required>
             </div>
             
             <div class="form-group">
-                <label for="type">Вид справки</label>
-                <select id="type" required>
+                <label for="certificateType">Вид справки</label>
+                <select id="certificateType" required>
                     <option value="">Выберите вид справки</option>
                     <option value="об обучении">Об обучении</option>
                     <option value="о стипендии">О стипендии</option>
                 </select>
-                <div class="error" id="typeError">Выберите вид справки</div>
             </div>
             
-            <div class="form-group" id="periodContainer">
-                <label>Период (для справки о стипендии)</label>
-                <div class="period-inputs">
-                    <input type="month" id="periodFrom" placeholder="С">
-                    <input type="month" id="periodTo" placeholder="По">
-                </div>
+            <div id="scholarshipPeriod" class="form-group hidden">
+                <label for="period">Период стипендии (с какого по какое)</label>
+                <input type="text" id="period" placeholder="Например: сентябрь 2023 - январь 2024">
             </div>
             
             <div class="form-group">
-                <label for="quantity">Количество (1-5)</label>
+                <label for="quantity">Количество экземпляров</label>
                 <input type="number" id="quantity" min="1" max="5" value="1" required>
-                <div class="error" id="quantityError">Введите число от 1 до 5</div>
+                <div class="optional">От 1 до 5 экземпляров</div>
             </div>
             
-            <button type="submit" id="submitButton">Отправить заказ</button>
-            
-            <button type="button" id="testButton" class="test-button">Тест (для компьютера)</button>
+            <button type="submit">Отправить заявку</button>
         </form>
-        
-        <div id="testInfo" class="test-info">
-            <h3>ℹ️ Информация для тестирования</h3>
-            <p>Web App работает только в мобильном приложении Telegram. На компьютере используйте кнопку "Тест".</p>
-            <p>Данные формы:</p>
-            <pre id="testData"></pre>
-        </div>
     </div>
 
     <script>
-        // Проверяем, запущено ли в Telegram Web App
-        const isTelegramWebApp = typeof Telegram !== 'undefined' && Telegram.WebApp;
+        // Инициализация Telegram Web App
+        let tg = window.Telegram.WebApp;
+        tg.expand();
+        tg.enableClosingConfirmation();
         
-        if (isTelegramWebApp) {
-            // Инициализация Telegram Web App
-            Telegram.WebApp.ready();
-            Telegram.WebApp.expand();
-            
-            // Получаем параметры из URL
-            const urlParams = new URLSearchParams(window.location.search);
-            const fullnameFromUrl = urlParams.get('fullname');
-            
-            // Если есть ФИО в URL, подставляем его
-            if (fullnameFromUrl && fullnameFromUrl !== 'None') {
-                document.getElementById('fullname').value = decodeURIComponent(fullnameFromUrl);
-            }
-        } else {
-            // Показываем информацию для тестирования на компьютере
-            document.getElementById('testInfo').style.display = 'block';
-            document.getElementById('testButton').style.display = 'block';
+        // Получение параметров из URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const fullnameFromTG = decodeURIComponent(urlParams.get('fullname') || '');
+        
+        // Установка ФИО из Telegram, если передано
+        if (fullnameFromTG) {
+            document.getElementById('fullname').placeholder = fullnameFromTG;
         }
         
-        // Показываем/скрываем поле периода
-        document.getElementById('type').addEventListener('change', function() {
-            document.getElementById('periodContainer').style.display = 
-                this.value === 'о стипендии' ? 'block' : 'none';
+        // Обработка изменения типа справки
+        document.getElementById('certificateType').addEventListener('change', function() {
+            const scholarshipPeriod = document.getElementById('scholarshipPeriod');
+            scholarshipPeriod.classList.toggle('hidden', this.value !== 'о стипендии');
         });
         
-        // Валидация формы
-        function validateForm() {
-            let isValid = true;
-            
-            // Скрываем все ошибки
-            document.querySelectorAll('.error').forEach(el => {
-                el.style.display = 'none';
-            });
-            
-            // Проверяем ФИО
-            if (!document.getElementById('fullname').value.trim()) {
-                document.getElementById('fullnameError').style.display = 'block';
-                isValid = false;
+        // Обработка количества экземпляров
+        document.getElementById('quantity').addEventListener('change', function() {
+            let value = parseInt(this.value);
+            if (isNaN(value) || value < 1) {
+                this.value = 1;
+            } else if (value > 5) {
+                this.value = 5;
             }
-            
-            // Проверяем корпус
-            if (!document.getElementById('building').value) {
-                document.getElementById('buildingError').style.display = 'block';
-                isValid = false;
-            }
-            
-            // Проверяем группу
-            if (!document.getElementById('group').value.trim()) {
-                document.getElementById('groupError').style.display = 'block';
-                isValid = false;
-            }
-            
-            // Проверяем тип справки
-            if (!document.getElementById('type').value) {
-                document.getElementById('typeError').style.display = 'block';
-                isValid = false;
-            }
-            
-            // Проверяем количество
-            const quantity = parseInt(document.getElementById('quantity').value);
-            if (isNaN(quantity) || quantity < 1 || quantity > 5) {
-                document.getElementById('quantityError').style.display = 'block';
-                isValid = false;
-            }
-            
-            return isValid;
-        }
+        });
         
-        // Функция получения данных формы
-        function getFormData() {
-            const formData = {
-                fullname: document.getElementById('fullname').value.trim(),
-                building: document.getElementById('building').value,
-                group: document.getElementById('group').value.trim(),
-                type: document.getElementById('type').value,
-                quantity: parseInt(document.getElementById('quantity').value)
-            };
-            
-            // Добавляем период для справки о стипендии
-            if (formData.type === 'о стипендии') {
-                formData.period = {
-                    from: document.getElementById('periodFrom').value,
-                    to: document.getElementById('periodTo').value
-                };
-            }
-            
-            return formData;
-        }
-        
-        // Обработка отправки формы (для Telegram)
+        // Обработка отправки формы
         document.getElementById('orderForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
-            if (!validateForm()) {
-                return;
-            }
+            const fullname = document.getElementById('fullname').value || fullnameFromTG || 'Иванов Иван Иванович';
+            const building = document.getElementById('building').value;
+            const group = document.getElementById('group').value;
+            const certificateType = document.getElementById('certificateType').value;
+            const period = document.getElementById('period').value;
+            const quantity = document.getElementById('quantity').value;
             
-            const formData = getFormData();
+            // Формирование данных для отправки
+            const formData = {
+                fullname: fullname,
+                building: building,
+                group: group,
+                certificateType: certificateType,
+                period: period,
+                quantity: quantity
+            };
             
-            if (isTelegramWebApp) {
-                // Отправляем данные в Telegram
-                Telegram.WebApp.sendData(JSON.stringify(formData));
-                Telegram.WebApp.close();
-            }
-        });
-        
-        // Обработка тестовой кнопки (для компьютера)
-        document.getElementById('testButton').addEventListener('click', function() {
-            if (!validateForm()) {
-                return;
-            }
+            // Отправка данных в Telegram бот
+            tg.sendData(JSON.stringify(formData));
             
-            const formData = getFormData();
-            document.getElementById('testData').textContent = JSON.stringify(formData, null, 2);
-            
-            alert('Данные формы (для тестирования):\n' + JSON.stringify(formData, null, 2));
+            // Закрытие веб-приложения
+            tg.close();
         });
     </script>
 </body>
