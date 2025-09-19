@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Заказ справки</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        :root {
+            --tg-theme-bg-color: #ffffff;
+            --tg-theme-text-color: #222222;
+            --tg-theme-button-color: #40a7e3;
+            --tg-theme-button-text-color: #ffffff;
+        }
+        
+        body {
+            background-color: var(--tg-theme-bg-color);
+            color: var(--tg-theme-text-color);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            padding: 16px;
+            margin: 0;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        
+        .form-group {
+            margin-bottom: 16px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        
+        .period-container {
+            display: none;
+            margin-top: 12px;
+        }
+        
+        .period-inputs {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .period-inputs input {
+            flex: 1;
+        }
+        
+        button {
+            background-color: var(--tg-theme-button-color);
+            color: var(--tg-theme-button-text-color);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+        }
+        
+        .example {
+            font-size: 12px;
+            color: #888;
+            margin-top: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Заказ справки</h1>
+        
+        <form id="orderForm">
+            <div class="form-group">
+                <label for="fullname">ФИО</label>
+                <input type="text" id="fullname" placeholder="Введите ваше ФИО" required>
+                <div class="example">Пример: Иванов Иван Иванович</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="building">Корпус</label>
+                <select id="building" required>
+                    <option value="" disabled selected>Выберите корпус</option>
+                    <option value="Главный">Главный</option>
+                    <option value="Первый">Первый</option>
+                    <option value="Второй">Второй</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="group">Название группы</label>
+                <input type="text" id="group" placeholder="Введите название группы" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="type">Вид справки</label>
+                <select id="type" required>
+                    <option value="" disabled selected>Выберите вид справки</option>
+                    <option value="об обучении">Об обучении</option>
+                    <option value="о стипендии">О стипендии</option>
+                </select>
+            </div>
+            
+            <div class="form-group" id="periodContainer">
+                <label>Период (для справки о стипендии)</label>
+                <div class="period-inputs">
+                    <input type="month" id="periodFrom" placeholder="С">
+                    <input type="month" id="periodTo" placeholder="По">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="quantity">Количество (макс. 5)</label>
+                <input type="number" id="quantity" min="1" max="5" value="1" required>
+            </div>
+            
+            <button type="submit">Отправить заказ</button>
+        </form>
+    </div>
+
+    <script>
+        // Получаем ФИО из URL, если оно есть
+        const pathParts = window.location.pathname.split('/');
+        const fullnameFromUrl = pathParts[pathParts.length - 2]; // Предпоследний элемент пути
+        
+        if (fullnameFromUrl && fullnameFromUrl !== 'none') {
+            document.getElementById('fullname').value = decodeURIComponent(fullnameFromUrl);
+        }
+        
+        // Показываем/скрываем поле периода в зависимости от выбора типа справки
+        document.getElementById('type').addEventListener('change', function() {
+            const periodContainer = document.getElementById('periodContainer');
+            periodContainer.style.display = this.value === 'о стипендии' ? 'block' : 'none';
+        });
+        
+        // Обработка отправки формы
+        document.getElementById('orderForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = {
+                fullname: document.getElementById('fullname').value,
+                building: document.getElementById('building').value,
+                group: document.getElementById('group').value,
+                type: document.getElementById('type').value,
+                quantity: parseInt(document.getElementById('quantity').value)
+            };
+            
+            // Добавляем период, если это справка о стипендии
+            if (formData.type === 'о стипендии') {
+                formData.period = {
+                    from: document.getElementById('periodFrom').value,
+                    to: document.getElementById('periodTo').value
+                };
+            }
+            
+            // Проверяем, что количество не больше 5
+            if (formData.quantity > 5) {
+                alert('Максимальное количество - 5');
+                return;
+            }
+            
+            // Отправляем данные в Telegram
+            Telegram.WebApp.sendData(JSON.stringify(formData));
+            Telegram.WebApp.close();
+        });
+        
+        // Инициализация Telegram Web App
+        Telegram.WebApp.ready();
+        Telegram.WebApp.expand();
+    </script>
+</body>
+</html>
