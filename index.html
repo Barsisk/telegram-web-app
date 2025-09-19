@@ -1,240 +1,339 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Заказ справки - САПК</title>
+    <title>Форма заказа</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        :root {
-            --bg-color: var(--tg-theme-bg-color, #ffffff);
-            --text-color: var(--tg-theme-text-color, #222222);
-            --button-color: var(--tg-theme-button-color, #40a7e3);
-            --button-text-color: var(--tg-theme-button-text-color, #ffffff);
-            --hint-color: var(--tg-theme-hint-color, #999999);
-            --border-color: var(--tg-theme-hint-color, #e0e0e0);
-        }
-
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
+        
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
+            background: #f8f9fa;
             padding: 16px;
-            line-height: 1.5;
         }
-
+        
         .container {
             max-width: 100%;
             margin: 0 auto;
         }
-
+        
         .header {
             text-align: center;
-            margin-bottom: 24px;
-            padding-bottom: 16px;
-            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
-
-        .header h1 {
-            font-size: 20px;
+        
+        .product-info {
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .product-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .product-title {
+            font-size: 18px;
             font-weight: 600;
-            margin-bottom: 4px;
+            margin-bottom: 8px;
+            color: #333;
         }
-
-        .header p {
-            color: var(--hint-color);
+        
+        .product-description {
+            color: #666;
+            margin-bottom: 10px;
             font-size: 14px;
         }
-
-        .form-group {
-            margin-bottom: 20px;
+        
+        .product-price {
+            font-size: 20px;
+            font-weight: 700;
+            color: #28a745;
         }
-
+        
+        .form-section {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
         label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 5px;
+            color: #333;
             font-weight: 500;
             font-size: 14px;
         }
-
-        input, select {
+        
+        input, select, textarea {
             width: 100%;
-            padding: 14px;
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            background-color: var(--bg-color);
-            color: var(--text-color);
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
             font-size: 16px;
-            outline: none;
-            transition: border-color 0.2s;
+            background: #f8f9fa;
         }
-
-        input:focus, select:focus {
-            border-color: var(--button-color);
+        
+        textarea {
+            height: 80px;
+            resize: vertical;
         }
-
-        .optional {
-            color: var(--hint-color);
-            font-size: 12px;
-            margin-top: 6px;
-        }
-
-        .hidden {
-            display: none;
-        }
-
+        
         .submit-btn {
-            background-color: var(--button-color);
-            color: var(--button-text-color);
-            border: none;
-            border-radius: 12px;
-            padding: 16px;
-            font-size: 16px;
-            font-weight: 500;
             width: 100%;
+            padding: 15px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
             cursor: pointer;
-            margin-top: 24px;
-            transition: opacity 0.2s;
+            margin-top: 10px;
         }
-
+        
         .submit-btn:disabled {
-            opacity: 0.6;
+            background: #ccc;
             cursor: not-allowed;
         }
-
-        .required::after {
-            content: " *";
-            color: #ff4444;
+        
+        .error {
+            color: #dc3545;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 20px;
+            display: none;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <h1>📋 Заказ справки</h1>
-            <p>Заполните форму для заказа справки</p>
+        <!-- Информация о продукте -->
+        <div id="productInfo" class="product-info" style="display: none;">
+            <img id="productImage" class="product-image" alt="Изображение товара">
+            <div class="product-title" id="productTitle"></div>
+            <div class="product-description" id="productDescription"></div>
+            <div class="product-price" id="productPrice"></div>
         </div>
-
-        <form id="orderForm">
-            <div class="form-group">
-                <label for="fullname" class="required">ФИО</label>
-                <input type="text" id="fullname" placeholder="Иванов Иван Иванович">
-                <div class="optional">Если оставить пустым, будет использовано имя из Telegram</div>
+        
+        <!-- Форма заказа -->
+        <div class="form-section">
+            <div class="header">
+                <h2>📦 Оформление заказа</h2>
             </div>
-
-            <div class="form-group">
-                <label for="building" class="required">Корпус</label>
-                <select id="building" required>
-                    <option value="">Выберите корпус</option>
-                    <option value="Главный">Главный корпус</option>
-                    <option value="Первый">Первый корпус</option>
-                    <option value="Второй">Второй корпус</option>
-                </select>
+            
+            <form id="orderForm">
+                <div class="form-group">
+                    <label for="fio">ФИО *</label>
+                    <input type="text" id="fio" name="fio" required placeholder="Иванов Иван Иванович">
+                    <div id="fioError" class="error">Пожалуйста, введите ФИО</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="phone">Телефон *</label>
+                    <input type="tel" id="phone" name="phone" required placeholder="+7 (999) 999-99-99">
+                    <div id="phoneError" class="error">Пожалуйста, введите телефон</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="address">Адрес доставки</label>
+                    <textarea id="address" name="address" placeholder="Город, улица, дом, квартира"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="quantity">Количество *</label>
+                    <select id="quantity" name="quantity" required>
+                        <option value="">Выберите количество</option>
+                        <option value="1">1 шт</option>
+                        <option value="2">2 шт</option>
+                        <option value="3">3 шт</option>
+                        <option value="4">4 шт</option>
+                        <option value="5">5 шт</option>
+                    </select>
+                    <div id="quantityError" class="error">Пожалуйста, выберите количество</div>
+                </div>
+                
+                <button type="submit" class="submit-btn" id="submitBtn">
+                    🛒 Оформить заказ
+                </button>
+            </form>
+            
+            <div id="loading" class="loading">
+                ⏳ Отправка заказа...
             </div>
-
-            <div class="form-group">
-                <label for="group" class="required">Название группы</label>
-                <input type="text" id="group" placeholder="ИСП-21" required>
-            </div>
-
-            <div class="form-group">
-                <label for="certificateType" class="required">Вид справки</label>
-                <select id="certificateType" required>
-                    <option value="">Выберите вид справки</option>
-                    <option value="об обучении">Об обучении</option>
-                    <option value="о стипендии">О стипендии</option>
-                </select>
-            </div>
-
-            <div id="scholarshipPeriod" class="form-group hidden">
-                <label for="period" class="required">Период стипендии</label>
-                <input type="text" id="period" placeholder="сентябрь 2023 - январь 2024">
-                <div class="optional">Укажите период, за который нужна справка</div>
-            </div>
-
-            <div class="form-group">
-                <label for="quantity" class="required">Количество экземпляров</label>
-                <input type="number" id="quantity" min="1" max="5" value="1" required>
-                <div class="optional">От 1 до 5 экземпляров</div>
-            </div>
-
-            <button type="submit" class="submit-btn">📨 Отправить заявку</button>
-        </form>
+        </div>
     </div>
 
     <script>
-        const tg = window.Telegram.WebApp;
-        tg.expand();
-        tg.enableClosingConfirmation();
-
-        // Получаем ФИО из параметров URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const fullnameFromUrl = urlParams.get('fullname');
-        if (fullnameFromUrl) {
-            document.getElementById('fullname').placeholder = decodeURIComponent(fullnameFromUrl);
-        }
-
-        // Обработка изменения типа справки
-        document.getElementById('certificateType').addEventListener('change', function() {
-            const scholarshipSection = document.getElementById('scholarshipPeriod');
-            const periodInput = document.getElementById('period');
+        // Основная функция инициализации
+        document.addEventListener('DOMContentLoaded', function() {
+            let tg;
             
-            if (this.value === 'о стипендии') {
-                scholarshipSection.classList.remove('hidden');
-                periodInput.required = true;
-            } else {
-                scholarshipSection.classList.add('hidden');
-                periodInput.required = false;
-                periodInput.value = '';
+            try {
+                // Инициализация Telegram WebApp
+                if (window.Telegram && window.Telegram.WebApp) {
+                    tg = window.Telegram.WebApp;
+                    
+                    // Инициализируем WebApp
+                    tg.ready();
+                    tg.expand();
+                    
+                    // Получаем параметры запуска из Telegram
+                    const initData = tg.initData || '';
+                    const initDataUnsafe = tg.initDataUnsafe || {};
+                    
+                    console.log('Init Data:', initData);
+                    console.log('Init Data Unsafe:', initDataUnsafe);
+                    
+                    // Показываем информацию о пользователе
+                    if (initDataUnsafe.user) {
+                        console.log('User:', initDataUnsafe.user);
+                    }
+                    
+                    // Показываем информацию о продукте (если передана)
+                    showProductInfo(initDataUnsafe);
+                }
+            } catch (error) {
+                console.warn('Telegram WebApp не доступен:', error);
             }
-        });
-
-        // Валидация количества
-        document.getElementById('quantity').addEventListener('change', function() {
-            let value = parseInt(this.value);
-            if (isNaN(value) || value < 1) {
-                this.value = 1;
-            } else if (value > 5) {
-                this.value = 5;
-            }
-        });
-
-        // Отправка формы
-        document.getElementById('orderForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
             
-            // Получаем данные формы
-            const formData = {
-                fullname: document.getElementById('fullname').value || document.getElementById('fullname').placeholder,
-                building: document.getElementById('building').value,
-                group: document.getElementById('group').value,
-                certificateType: document.getElementById('certificateType').value,
-                period: document.getElementById('period').value,
-                quantity: parseInt(document.getElementById('quantity').value)
-            };
-
-            // Валидация
-            if (!formData.building || !formData.group || !formData.certificateType) {
-                alert('Пожалуйста, заполните все обязательные поля');
-                return;
-            }
-
-            if (formData.certificateType === 'о стипендии' && !formData.period) {
-                alert('Пожалуйста, укажите период для справки о стипендии');
-                return;
-            }
-
-            // Отправляем данные в бота
-            tg.sendData(JSON.stringify(formData));
+            // Обработчик формы
+            const form = document.getElementById('orderForm');
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                if (validateForm()) {
+                    // Показываем загрузку
+                    document.getElementById('submitBtn').disabled = true;
+                    document.getElementById('loading').style.display = 'block';
+                    
+                    // Собираем данные формы
+                    const formData = {
+                        fio: document.getElementById('fio').value.trim(),
+                        phone: document.getElementById('phone').value.trim(),
+                        address: document.getElementById('address').value.trim(),
+                        quantity: document.getElementById('quantity').value,
+                        timestamp: new Date().toISOString()
+                    };
+                    
+                    console.log('Отправляемые данные:', formData);
+                    
+                    // Отправляем данные через Telegram WebApp
+                    setTimeout(function() {
+                        try {
+                            if (tg && typeof tg.sendData === 'function') {
+                                tg.sendData(JSON.stringify(formData));
+                                console.log('Данные отправлены через WebApp');
+                            } else {
+                                // Для тестирования
+                                console.log('Данные для отправки:', formData);
+                                alert('Заказ оформлен: ' + JSON.stringify(formData));
+                            }
+                            
+                            // Закрываем WebApp
+                            if (tg && typeof tg.close === 'function') {
+                                setTimeout(function() {
+                                    tg.close();
+                                }, 500);
+                            }
+                            
+                        } catch (error) {
+                            console.error('Ошибка отправки:', error);
+                            alert('Ошибка отправки заказа');
+                            document.getElementById('submitBtn').disabled = false;
+                            document.getElementById('loading').style.display = 'none';
+                        }
+                    }, 1000);
+                }
+            });
             
-            // Закрываем веб-приложение
-            setTimeout(() => tg.close(), 300);
+            // Функция показа информации о продукте
+            function showProductInfo(initData) {
+                const productInfo = document.getElementById('productInfo');
+                const startParam = tg?.startParam || initData.start_param;
+                
+                if (startParam) {
+                    try {
+                        const productData = JSON.parse(decodeURIComponent(startParam));
+                        
+                        if (productData.title) {
+                            document.getElementById('productTitle').textContent = productData.title;
+                        }
+                        if (productData.description) {
+                            document.getElementById('productDescription').textContent = productData.description;
+                        }
+                        if (productData.price) {
+                            document.getElementById('productPrice').textContent = `💰 ${productData.price} руб.`;
+                        }
+                        if (productData.image) {
+                            document.getElementById('productImage').src = productData.image;
+                        }
+                        
+                        productInfo.style.display = 'block';
+                        
+                    } catch (e) {
+                        console.warn('Не удалось распарсить start_param:', e);
+                    }
+                }
+            }
+            
+            // Функция валидации формы
+            function validateForm() {
+                let isValid = true;
+                
+                // Сбрасываем ошибки
+                document.querySelectorAll('.error').forEach(el => {
+                    el.style.display = 'none';
+                });
+                
+                // Проверяем обязательные поля
+                const fio = document.getElementById('fio').value.trim();
+                const phone = document.getElementById('phone').value.trim();
+                const quantity = document.getElementById('quantity').value;
+                
+                if (!fio) {
+                    document.getElementById('fioError').style.display = 'block';
+                    isValid = false;
+                }
+                
+                if (!phone) {
+                    document.getElementById('phoneError').style.display = 'block';
+                    isValid = false;
+                }
+                
+                if (!quantity) {
+                    document.getElementById('quantityError').style.display = 'block';
+                    isValid = false;
+                }
+                
+                return isValid;
+            }
         });
     </script>
 </body>
