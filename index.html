@@ -88,7 +88,7 @@
             </div>
             
             <div class="form-group">
-                <label for="building">Корпус</label>
+                <label for="building">Корпус *</label>
                 <select id="building" required>
                     <option value="">Выберите корпус</option>
                     <option value="Главный">Главный корпус</option>
@@ -98,12 +98,12 @@
             </div>
             
             <div class="form-group">
-                <label for="group">Название группы</label>
+                <label for="group">Название группы *</label>
                 <input type="text" id="group" placeholder="Например: ИСП-21" required>
             </div>
             
             <div class="form-group">
-                <label for="certificateType">Вид справки</label>
+                <label for="certificateType">Вид справки *</label>
                 <select id="certificateType" required>
                     <option value="">Выберите вид справки</option>
                     <option value="об обучении">Об обучении</option>
@@ -127,6 +127,7 @@
     </div>
 
     <script>
+        // Инициализация Telegram Web App
         let tg = window.Telegram.WebApp;
         tg.expand();
         tg.enableClosingConfirmation();
@@ -135,37 +136,18 @@
         const urlParams = new URLSearchParams(window.location.search);
         const fullnameFromTG = decodeURIComponent(urlParams.get('fullname') || '');
         
-        // Альтернативно: получаем из initData Telegram
-        let initData = tg.initData;
-        let fullnameFromInitData = '';
-        
-        if (initData) {
-            const params = new URLSearchParams(initData);
-            const userStr = params.get('user');
-            if (userStr) {
-                try {
-                    const user = JSON.parse(decodeURIComponent(userStr));
-                    if (user.first_name || user.last_name) {
-                        fullnameFromInitData = [user.first_name, user.last_name].filter(Boolean).join(' ');
-                    }
-                } catch (e) {
-                    console.error('Error parsing user data:', e);
-                }
-            }
-        }
-        
-        // Используем ФИО из параметра URL или из initData
-        const finalFullname = fullnameFromTG || fullnameFromInitData;
-        
         // Установка ФИО из Telegram, если доступно
-        if (finalFullname) {
-            document.getElementById('fullname').placeholder = finalFullname;
+        if (fullnameFromTG) {
+            document.getElementById('fullname').placeholder = fullnameFromTG;
         }
         
         // Обработка изменения типа справки
         document.getElementById('certificateType').addEventListener('change', function() {
             const scholarshipPeriod = document.getElementById('scholarshipPeriod');
             scholarshipPeriod.classList.toggle('hidden', this.value !== 'о стипендии');
+            
+            // Сделать поле периода обязательным для справки о стипендии
+            document.getElementById('period').required = this.value === 'о стипендии';
         });
         
         // Обработка количества экземпляров
@@ -182,12 +164,24 @@
         document.getElementById('orderForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
-            const fullname = document.getElementById('fullname').value || fullnameFromTG || 'Иванов Иван Иванович';
+            // Валидация формы
             const building = document.getElementById('building').value;
             const group = document.getElementById('group').value;
             const certificateType = document.getElementById('certificateType').value;
+            
+            if (!building || !group || !certificateType) {
+                alert('Пожалуйста, заполните все обязательные поля');
+                return;
+            }
+            
+            // Получение данных формы
+            const fullname = document.getElementById('fullname').value || fullnameFromTG || 'Не указано';
             const period = document.getElementById('period').value;
-            const quantity = document.getElementById('quantity').value;
+            let quantity = parseInt(document.getElementById('quantity').value);
+            
+            // Корректировка количества
+            if (isNaN(quantity) || quantity < 1) quantity = 1;
+            if (quantity > 5) quantity = 5;
             
             // Формирование данных для отправки
             const formData = {
@@ -195,9 +189,11 @@
                 building: building,
                 group: group,
                 certificateType: certificateType,
-                period: period,
+                period: period || 'Не указано',
                 quantity: quantity
             };
+            
+            console.log('Отправка данных:', formData);
             
             // Отправка данных в Telegram бот
             tg.sendData(JSON.stringify(formData));
