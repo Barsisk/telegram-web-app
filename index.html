@@ -127,19 +127,42 @@
     </div>
 
     <script>
-        // Инициализация Telegram Web App
         let tg = window.Telegram.WebApp;
-        tg.expand();
-        tg.enableClosingConfirmation();
-        
-        // Получение параметров из URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const fullnameFromTG = decodeURIComponent(urlParams.get('fullname') || '');
-        
-        // Установка ФИО из Telegram, если передано
-        if (fullnameFromTG) {
-            document.getElementById('fullname').placeholder = fullnameFromTG;
+    tg.expand();
+    tg.enableClosingConfirmation();
+    
+    // Получение параметров из initData Telegram
+    let initData = tg.initData;
+    let fullnameFromTG = '';
+    
+    // Парсим initData чтобы найти fullname
+    if (initData) {
+        const params = new URLSearchParams(initData);
+        const userStr = params.get('user');
+        if (userStr) {
+            try {
+                const user = JSON.parse(decodeURIComponent(userStr));
+                if (user.first_name || user.last_name) {
+                    fullnameFromTG = [user.first_name, user.last_name].filter(Boolean).join(' ');
+                }
+            } catch (e) {
+                console.error('Error parsing user data:', e);
+            }
         }
+    }
+    
+    // Альтернативно: получаем из startapp параметра
+    const urlParams = new URLSearchParams(window.location.search);
+    const startappParam = urlParams.get('startapp') || '';
+    
+    if (startappParam.startsWith('fullname_')) {
+        fullnameFromTG = decodeURIComponent(startappParam.replace('fullname_', ''));
+    }
+    
+    // Установка ФИО из Telegram, если доступно
+    if (fullnameFromTG) {
+        document.getElementById('fullname').placeholder = fullnameFromTG;
+    }
         
         // Обработка изменения типа справки
         document.getElementById('certificateType').addEventListener('change', function() {
