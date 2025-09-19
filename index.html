@@ -3,92 +3,133 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Заказ справки</title>
+    <title>Заказ справки - САПК</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background-color: var(--tg-theme-bg-color, #ffffff);
-            color: var(--tg-theme-text-color, #222222);
+        :root {
+            --bg-color: var(--tg-theme-bg-color, #ffffff);
+            --text-color: var(--tg-theme-text-color, #222222);
+            --button-color: var(--tg-theme-button-color, #40a7e3);
+            --button-text-color: var(--tg-theme-button-text-color, #ffffff);
+            --hint-color: var(--tg-theme-hint-color, #999999);
+            --border-color: var(--tg-theme-hint-color, #e0e0e0);
+        }
+
+        * {
             margin: 0;
-            padding: 16px;
-        }
-        
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-        }
-        
-        h1 {
-            font-size: 20px;
-            text-align: center;
-            margin-bottom: 20px;
-            color: var(--tg-theme-text-color, #222222);
-        }
-        
-        .form-group {
-            margin-bottom: 16px;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 6px;
-            font-weight: 500;
-        }
-        
-        input, select {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid var(--tg-theme-hint-color, #999999);
-            border-radius: 10px;
-            background-color: var(--tg-theme-bg-color, #ffffff);
-            color: var(--tg-theme-text-color, #222222);
-            font-size: 16px;
+            padding: 0;
             box-sizing: border-box;
         }
-        
-        .optional {
-            color: var(--tg-theme-hint-color, #999999);
-            font-size: 12px;
-            margin-top: 4px;
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding: 16px;
+            line-height: 1.5;
         }
-        
-        button {
-            background-color: var(--tg-theme-button-color, #2481cc);
-            color: var(--tg-theme-button-text-color, #ffffff);
+
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .header h1 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .header p {
+            color: var(--hint-color);
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--button-color);
+        }
+
+        .optional {
+            color: var(--hint-color);
+            font-size: 12px;
+            margin-top: 6px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .submit-btn {
+            background-color: var(--button-color);
+            color: var(--button-text-color);
             border: none;
-            border-radius: 10px;
-            padding: 12px 20px;
+            border-radius: 12px;
+            padding: 16px;
             font-size: 16px;
             font-weight: 500;
-            cursor: pointer;
             width: 100%;
-            margin-top: 16px;
+            cursor: pointer;
+            margin-top: 24px;
+            transition: opacity 0.2s;
         }
-        
-        button:disabled {
+
+        .submit-btn:disabled {
             opacity: 0.6;
             cursor: not-allowed;
         }
-        
-        .hidden {
-            display: none;
+
+        .required::after {
+            content: " *";
+            color: #ff4444;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Заказ справки</h1>
-        
+        <div class="header">
+            <h1>📋 Заказ справки</h1>
+            <p>Заполните форму для заказа справки</p>
+        </div>
+
         <form id="orderForm">
             <div class="form-group">
-                <label for="fullname">ФИО</label>
-                <input type="text" id="fullname" placeholder="Например: Иванов Иван Иванович" required>
+                <label for="fullname" class="required">ФИО</label>
+                <input type="text" id="fullname" placeholder="Иванов Иван Иванович">
                 <div class="optional">Если оставить пустым, будет использовано имя из Telegram</div>
             </div>
-            
+
             <div class="form-group">
-                <label for="building">Корпус *</label>
+                <label for="building" class="required">Корпус</label>
                 <select id="building" required>
                     <option value="">Выберите корпус</option>
                     <option value="Главный">Главный корпус</option>
@@ -96,61 +137,65 @@
                     <option value="Второй">Второй корпус</option>
                 </select>
             </div>
-            
+
             <div class="form-group">
-                <label for="group">Название группы *</label>
-                <input type="text" id="group" placeholder="Например: ИСП-21" required>
+                <label for="group" class="required">Название группы</label>
+                <input type="text" id="group" placeholder="ИСП-21" required>
             </div>
-            
+
             <div class="form-group">
-                <label for="certificateType">Вид справки *</label>
+                <label for="certificateType" class="required">Вид справки</label>
                 <select id="certificateType" required>
                     <option value="">Выберите вид справки</option>
                     <option value="об обучении">Об обучении</option>
                     <option value="о стипендии">О стипендии</option>
                 </select>
             </div>
-            
+
             <div id="scholarshipPeriod" class="form-group hidden">
-                <label for="period">Период стипендии (с какого по какое)</label>
-                <input type="text" id="period" placeholder="Например: сентябрь 2023 - январь 2024">
+                <label for="period" class="required">Период стипендии</label>
+                <input type="text" id="period" placeholder="сентябрь 2023 - январь 2024">
+                <div class="optional">Укажите период, за который нужна справка</div>
             </div>
-            
+
             <div class="form-group">
-                <label for="quantity">Количество экземпляров</label>
+                <label for="quantity" class="required">Количество экземпляров</label>
                 <input type="number" id="quantity" min="1" max="5" value="1" required>
                 <div class="optional">От 1 до 5 экземпляров</div>
             </div>
-            
-            <button type="submit">Отправить заявку</button>
+
+            <button type="submit" class="submit-btn">📨 Отправить заявку</button>
         </form>
     </div>
 
     <script>
-        // Инициализация Telegram Web App
-        let tg = window.Telegram.WebApp;
+        const tg = window.Telegram.WebApp;
         tg.expand();
         tg.enableClosingConfirmation();
-        
-        // Получение параметров из URL
+
+        // Получаем ФИО из параметров URL
         const urlParams = new URLSearchParams(window.location.search);
-        const fullnameFromTG = decodeURIComponent(urlParams.get('fullname') || '');
-        
-        // Установка ФИО из Telegram, если доступно
-        if (fullnameFromTG) {
-            document.getElementById('fullname').placeholder = fullnameFromTG;
+        const fullnameFromUrl = urlParams.get('fullname');
+        if (fullnameFromUrl) {
+            document.getElementById('fullname').placeholder = decodeURIComponent(fullnameFromUrl);
         }
-        
+
         // Обработка изменения типа справки
         document.getElementById('certificateType').addEventListener('change', function() {
-            const scholarshipPeriod = document.getElementById('scholarshipPeriod');
-            scholarshipPeriod.classList.toggle('hidden', this.value !== 'о стипендии');
+            const scholarshipSection = document.getElementById('scholarshipPeriod');
+            const periodInput = document.getElementById('period');
             
-            // Сделать поле периода обязательным для справки о стипендии
-            document.getElementById('period').required = this.value === 'о стипендии';
+            if (this.value === 'о стипендии') {
+                scholarshipSection.classList.remove('hidden');
+                periodInput.required = true;
+            } else {
+                scholarshipSection.classList.add('hidden');
+                periodInput.required = false;
+                periodInput.value = '';
+            }
         });
-        
-        // Обработка количества экземпляров
+
+        // Валидация количества
         document.getElementById('quantity').addEventListener('change', function() {
             let value = parseInt(this.value);
             if (isNaN(value) || value < 1) {
@@ -159,47 +204,37 @@
                 this.value = 5;
             }
         });
-        
-        // Обработка отправки формы
-        document.getElementById('orderForm').addEventListener('submit', function(e) {
+
+        // Отправка формы
+        document.getElementById('orderForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            // Валидация формы
-            const building = document.getElementById('building').value;
-            const group = document.getElementById('group').value;
-            const certificateType = document.getElementById('certificateType').value;
-            
-            if (!building || !group || !certificateType) {
+            // Получаем данные формы
+            const formData = {
+                fullname: document.getElementById('fullname').value || document.getElementById('fullname').placeholder,
+                building: document.getElementById('building').value,
+                group: document.getElementById('group').value,
+                certificateType: document.getElementById('certificateType').value,
+                period: document.getElementById('period').value,
+                quantity: parseInt(document.getElementById('quantity').value)
+            };
+
+            // Валидация
+            if (!formData.building || !formData.group || !formData.certificateType) {
                 alert('Пожалуйста, заполните все обязательные поля');
                 return;
             }
-            
-            // Получение данных формы
-            const fullname = document.getElementById('fullname').value || fullnameFromTG || 'Не указано';
-            const period = document.getElementById('period').value;
-            let quantity = parseInt(document.getElementById('quantity').value);
-            
-            // Корректировка количества
-            if (isNaN(quantity) || quantity < 1) quantity = 1;
-            if (quantity > 5) quantity = 5;
-            
-            // Формирование данных для отправки
-            const formData = {
-                fullname: fullname,
-                building: building,
-                group: group,
-                certificateType: certificateType,
-                period: period || 'Не указано',
-                quantity: quantity
-            };
-            
-            console.log('Отправка данных:', formData);
-            
-            // Отправка данных в Telegram бот
+
+            if (formData.certificateType === 'о стипендии' && !formData.period) {
+                alert('Пожалуйста, укажите период для справки о стипендии');
+                return;
+            }
+
+            // Отправляем данные в бота
             tg.sendData(JSON.stringify(formData));
             
-            // Закрытие веб-приложения
-            tg.close();
+            // Закрываем веб-приложение
+            setTimeout(() => tg.close(), 300);
         });
     </script>
 </body>
