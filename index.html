@@ -50,9 +50,8 @@
             box-sizing: border-box;
         }
         
-        .period-container {
+        #periodContainer {
             display: none;
-            margin-top: 12px;
         }
         
         .period-inputs {
@@ -77,19 +76,10 @@
             margin-top: 20px;
         }
         
-        .example {
-            font-size: 12px;
-            color: #888;
-            margin-top: 4px;
-        }
-        
         .error {
             color: #ff3333;
             font-size: 14px;
             margin-top: 4px;
-        }
-        
-        .hidden {
             display: none;
         }
     </style>
@@ -102,50 +92,48 @@
             <div class="form-group">
                 <label for="fullname">ФИО</label>
                 <input type="text" id="fullname" placeholder="Введите ваше ФИО" required>
-                <div class="example">Пример: Иванов Иван Иванович</div>
-                <div class="error hidden" id="fullnameError">Поле ФИО обязательно для заполнения</div>
+                <div class="error" id="fullnameError">Поле ФИО обязательно</div>
             </div>
             
             <div class="form-group">
                 <label for="building">Корпус</label>
                 <select id="building" required>
-                    <option value="" disabled selected>Выберите корпус</option>
+                    <option value="">Выберите корпус</option>
                     <option value="Главный">Главный</option>
                     <option value="Первый">Первый</option>
                     <option value="Второй">Второй</option>
                 </select>
-                <div class="error hidden" id="buildingError">Выберите корпус</div>
+                <div class="error" id="buildingError">Выберите корпус</div>
             </div>
             
             <div class="form-group">
                 <label for="group">Название группы</label>
                 <input type="text" id="group" placeholder="Введите название группы" required>
-                <div class="error hidden" id="groupError">Поле группы обязательно для заполнения</div>
+                <div class="error" id="groupError">Поле группы обязательно</div>
             </div>
             
             <div class="form-group">
                 <label for="type">Вид справки</label>
                 <select id="type" required>
-                    <option value="" disabled selected>Выберите вид справки</option>
+                    <option value="">Выберите вид справки</option>
                     <option value="об обучении">Об обучении</option>
                     <option value="о стипендии">О стипендии</option>
                 </select>
-                <div class="error hidden" id="typeError">Выберите вид справки</div>
+                <div class="error" id="typeError">Выберите вид справки</div>
             </div>
             
-            <div class="form-group hidden" id="periodContainer">
+            <div class="form-group" id="periodContainer">
                 <label>Период (для справки о стипендии)</label>
                 <div class="period-inputs">
                     <input type="month" id="periodFrom" placeholder="С">
                     <input type="month" id="periodTo" placeholder="По">
                 </div>
-                <div class="error hidden" id="periodError">Заполните период для справки о стипендии</div>
             </div>
             
             <div class="form-group">
-                <label for="quantity">Количество (макс. 5)</label>
+                <label for="quantity">Количество (1-5)</label>
                 <input type="number" id="quantity" min="1" max="5" value="1" required>
-                <div class="error hidden" id="quantityError">Введите количество от 1 до 5</div>
+                <div class="error" id="quantityError">Введите число от 1 до 5</div>
             </div>
             
             <button type="submit">Отправить заказ</button>
@@ -153,69 +141,62 @@
     </div>
 
     <script>
+        // Инициализация Telegram Web App
+        Telegram.WebApp.ready();
+        Telegram.WebApp.expand();
+        
         // Получаем параметры из URL
         const urlParams = new URLSearchParams(window.location.search);
         const fullnameFromUrl = urlParams.get('fullname');
         
         // Если есть ФИО в URL, подставляем его
-        if (fullnameFromUrl) {
+        if (fullnameFromUrl && fullnameFromUrl !== 'None') {
             document.getElementById('fullname').value = decodeURIComponent(fullnameFromUrl);
         }
         
-        // Показываем/скрываем поле периода в зависимости от выбора типа справки
+        // Показываем/скрываем поле периода
         document.getElementById('type').addEventListener('change', function() {
-            const periodContainer = document.getElementById('periodContainer');
-            if (this.value === 'о стипендии') {
-                periodContainer.classList.remove('hidden');
-            } else {
-                periodContainer.classList.add('hidden');
-            }
+            document.getElementById('periodContainer').style.display = 
+                this.value === 'о стипендии' ? 'block' : 'none';
         });
         
-        // Функция для скрытия ошибок
-        function hideErrors() {
-            document.querySelectorAll('.error').forEach(el => {
-                el.classList.add('hidden');
-            });
-        }
-        
-        // Функция для показа ошибки
-        function showError(elementId) {
-            document.getElementById(elementId).classList.remove('hidden');
-        }
-        
         // Валидация формы
-        function validateForm(formData) {
+        function validateForm() {
             let isValid = true;
-            hideErrors();
             
-            if (!formData.fullname.trim()) {
-                showError('fullnameError');
+            // Скрываем все ошибки
+            document.querySelectorAll('.error').forEach(el => {
+                el.style.display = 'none';
+            });
+            
+            // Проверяем ФИО
+            if (!document.getElementById('fullname').value.trim()) {
+                document.getElementById('fullnameError').style.display = 'block';
                 isValid = false;
             }
             
-            if (!formData.building) {
-                showError('buildingError');
+            // Проверяем корпус
+            if (!document.getElementById('building').value) {
+                document.getElementById('buildingError').style.display = 'block';
                 isValid = false;
             }
             
-            if (!formData.group.trim()) {
-                showError('groupError');
+            // Проверяем группу
+            if (!document.getElementById('group').value.trim()) {
+                document.getElementById('groupError').style.display = 'block';
                 isValid = false;
             }
             
-            if (!formData.type) {
-                showError('typeError');
+            // Проверяем тип справки
+            if (!document.getElementById('type').value) {
+                document.getElementById('typeError').style.display = 'block';
                 isValid = false;
             }
             
-            if (formData.type === 'о стипендии' && (!formData.period.from || !formData.period.to)) {
-                showError('periodError');
-                isValid = false;
-            }
-            
-            if (formData.quantity < 1 || formData.quantity > 5) {
-                showError('quantityError');
+            // Проверяем количество
+            const quantity = parseInt(document.getElementById('quantity').value);
+            if (isNaN(quantity) || quantity < 1 || quantity > 5) {
+                document.getElementById('quantityError').style.display = 'block';
                 isValid = false;
             }
             
@@ -226,15 +207,19 @@
         document.getElementById('orderForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
+            if (!validateForm()) {
+                return;
+            }
+            
             const formData = {
-                fullname: document.getElementById('fullname').value,
+                fullname: document.getElementById('fullname').value.trim(),
                 building: document.getElementById('building').value,
-                group: document.getElementById('group').value,
+                group: document.getElementById('group').value.trim(),
                 type: document.getElementById('type').value,
                 quantity: parseInt(document.getElementById('quantity').value)
             };
             
-            // Добавляем период, если это справка о стипендии
+            // Добавляем период для справки о стипендии
             if (formData.type === 'о стипендии') {
                 formData.period = {
                     from: document.getElementById('periodFrom').value,
@@ -242,19 +227,9 @@
                 };
             }
             
-            // Проверяем валидность формы
-            if (!validateForm(formData)) {
-                return;
-            }
-            
             // Отправляем данные в Telegram
             Telegram.WebApp.sendData(JSON.stringify(formData));
-            Telegram.WebApp.close();
         });
-        
-        // Инициализация Telegram Web App
-        Telegram.WebApp.ready();
-        Telegram.WebApp.expand();
     </script>
 </body>
 </html>
