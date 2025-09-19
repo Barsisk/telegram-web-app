@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Форма заказа</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         * {
             margin: 0;
@@ -14,64 +13,54 @@
         
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #f8f9fa;
-            padding: 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         
         .container {
-            max-width: 100%;
-            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            width: 100%;
+            max-width: 450px;
         }
         
         .header {
             text-align: center;
             margin-bottom: 20px;
-            padding: 15px;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
         
-        .product-info {
-            background: white;
+        .header h1 {
+            color: #333;
+            font-size: 22px;
+            margin-bottom: 10px;
+        }
+        
+        .bot-data {
+            background: #f8f9fa;
             padding: 15px;
-            border-radius: 12px;
+            border-radius: 10px;
             margin-bottom: 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-left: 4px solid #007bff;
         }
         
-        .product-image {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            border-radius: 8px;
-            margin-bottom: 15px;
-        }
-        
-        .product-title {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 8px;
+        .bot-data h3 {
+            margin: 0 0 10px 0;
             color: #333;
         }
         
-        .product-description {
-            color: #666;
-            margin-bottom: 10px;
-            font-size: 14px;
-        }
-        
-        .product-price {
-            font-size: 20px;
-            font-weight: 700;
-            color: #28a745;
-        }
-        
-        .form-section {
-            background: white;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        .bot-image {
+            width: 100%;
+            max-height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border: 2px solid #ddd;
         }
         
         .form-group {
@@ -83,39 +72,26 @@
             margin-bottom: 5px;
             color: #333;
             font-weight: 500;
-            font-size: 14px;
         }
         
-        input, select, textarea {
+        input, select {
             width: 100%;
             padding: 12px;
             border: 1px solid #ddd;
-            border-radius: 8px;
+            border-radius: 6px;
             font-size: 16px;
-            background: #f8f9fa;
-        }
-        
-        textarea {
-            height: 80px;
-            resize: vertical;
         }
         
         .submit-btn {
             width: 100%;
-            padding: 15px;
+            padding: 12px;
             background: #28a745;
             color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: 6px;
             font-size: 16px;
-            font-weight: 600;
             cursor: pointer;
             margin-top: 10px;
-        }
-        
-        .submit-btn:disabled {
-            background: #ccc;
-            cursor: not-allowed;
         }
         
         .error {
@@ -124,216 +100,133 @@
             margin-top: 5px;
             display: none;
         }
-        
-        .loading {
-            text-align: center;
-            padding: 20px;
-            display: none;
-        }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Информация о продукте -->
-        <div id="productInfo" class="product-info" style="display: none;">
-            <img id="productImage" class="product-image" alt="Изображение товара">
-            <div class="product-title" id="productTitle"></div>
-            <div class="product-description" id="productDescription"></div>
-            <div class="product-price" id="productPrice"></div>
+        <!-- Блок для данных от бота -->
+        <div id="botData" class="bot-data" style="display: none;">
+            <h3>📨 Данные от бота:</h3>
+            <div id="botMessage"></div>
+            <img id="botImage" class="bot-image" alt="Изображение от бота">
         </div>
         
-        <!-- Форма заказа -->
-        <div class="form-section">
-            <div class="header">
-                <h2>📦 Оформление заказа</h2>
-            </div>
-            
-            <form id="orderForm">
-                <div class="form-group">
-                    <label for="fio">ФИО *</label>
-                    <input type="text" id="fio" name="fio" required placeholder="Иванов Иван Иванович">
-                    <div id="fioError" class="error">Пожалуйста, введите ФИО</div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="phone">Телефон *</label>
-                    <input type="tel" id="phone" name="phone" required placeholder="+7 (999) 999-99-99">
-                    <div id="phoneError" class="error">Пожалуйста, введите телефон</div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="address">Адрес доставки</label>
-                    <textarea id="address" name="address" placeholder="Город, улица, дом, квартира"></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label for="quantity">Количество *</label>
-                    <select id="quantity" name="quantity" required>
-                        <option value="">Выберите количество</option>
-                        <option value="1">1 шт</option>
-                        <option value="2">2 шт</option>
-                        <option value="3">3 шт</option>
-                        <option value="4">4 шт</option>
-                        <option value="5">5 шт</option>
-                    </select>
-                    <div id="quantityError" class="error">Пожалуйста, выберите количество</div>
-                </div>
-                
-                <button type="submit" class="submit-btn" id="submitBtn">
-                    🛒 Оформить заказ
-                </button>
-            </form>
-            
-            <div id="loading" class="loading">
-                ⏳ Отправка заказа...
-            </div>
+        <div class="header">
+            <h1>📋 Форма заказа</h1>
+            <p id="userInfo"></p>
         </div>
+        
+        <form id="dataForm">
+            <div class="form-group">
+                <label for="fio">ФИО:</label>
+                <input type="text" id="fio" name="fio" required placeholder="Иванов Иван Иванович">
+                <div id="fioError" class="error">Пожалуйста, введите ФИО</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="choice">Выберите вариант:</label>
+                <select id="choice" name="choice" required>
+                    <option value="">-- Выберите --</option>
+                    <option value="1">Вариант 1</option>
+                    <option value="2">Вариант 2</option>
+                </select>
+                <div id="choiceError" class="error">Пожалуйста, выберите вариант</div>
+            </div>
+            
+            <button type="submit" class="submit-btn">📤 Отправить заказ</button>
+        </form>
     </div>
 
     <script>
-        // Основная функция инициализации
-        document.addEventListener('DOMContentLoaded', function() {
-            let tg;
+        // Функция для получения параметров из URL
+        function getUrlParams() {
+            const params = {};
+            const queryString = window.location.search.substring(1);
+            const pairs = queryString.split('&');
             
-            try {
-                // Инициализация Telegram WebApp
-                if (window.Telegram && window.Telegram.WebApp) {
-                    tg = window.Telegram.WebApp;
-                    
-                    // Инициализируем WebApp
-                    tg.ready();
-                    tg.expand();
-                    
-                    // Получаем параметры запуска из Telegram
-                    const initData = tg.initData || '';
-                    const initDataUnsafe = tg.initDataUnsafe || {};
-                    
-                    console.log('Init Data:', initData);
-                    console.log('Init Data Unsafe:', initDataUnsafe);
-                    
-                    // Показываем информацию о пользователе
-                    if (initDataUnsafe.user) {
-                        console.log('User:', initDataUnsafe.user);
-                    }
-                    
-                    // Показываем информацию о продукте (если передана)
-                    showProductInfo(initDataUnsafe);
+            for (const pair of pairs) {
+                const [key, value] = pair.split('=');
+                if (key && value) {
+                    params[decodeURIComponent(key)] = decodeURIComponent(value);
                 }
-            } catch (error) {
-                console.warn('Telegram WebApp не доступен:', error);
+            }
+            return params;
+        }
+        
+        // Функция для отправки данных обратно в Telegram
+        function sendDataToTelegram(formData) {
+            // Для встроенного бота используем Telegram WebApp API если доступно
+            if (window.Telegram && window.Telegram.WebApp) {
+                try {
+                    const tg = window.Telegram.WebApp;
+                    tg.sendData(JSON.stringify(formData));
+                    tg.close();
+                } catch (error) {
+                    console.error('Ошибка отправки через WebApp:', error);
+                    // Альтернативный метод для встроенных ботов
+                    alert('Данные готовы к отправке: ' + JSON.stringify(formData));
+                }
+            } else {
+                // Если WebApp не доступен (прямой переход по ссылке)
+                alert('Данные формы: ' + JSON.stringify(formData));
+            }
+        }
+        
+        // Функция для отображения данных от бота
+        function displayBotData() {
+            const params = getUrlParams();
+            
+            // Показываем информацию о пользователе если есть
+            if (params.user) {
+                document.getElementById('userInfo').textContent = `Пользователь: ${params.user}`;
             }
             
-            // Обработчик формы
-            const form = document.getElementById('orderForm');
+            if (params.message || params.image) {
+                const botDataDiv = document.getElementById('botData');
+                const botMessageDiv = document.getElementById('botMessage');
+                const botImage = document.getElementById('botImage');
+                
+                if (params.message) {
+                    botMessageDiv.textContent = params.message;
+                }
+                
+                if (params.image) {
+                    botImage.src = params.image;
+                    botImage.style.display = 'block';
+                } else {
+                    botImage.style.display = 'none';
+                }
+                
+                botDataDiv.style.display = 'block';
+            }
+        }
+        
+        // Инициализация при загрузке
+        document.addEventListener('DOMContentLoaded', function() {
+            displayBotData();
+            
+            const form = document.getElementById('dataForm');
             form.addEventListener('submit', function(e) {
                 e.preventDefault();
                 
-                if (validateForm()) {
-                    // Показываем загрузку
-                    document.getElementById('submitBtn').disabled = true;
-                    document.getElementById('loading').style.display = 'block';
-                    
-                    // Собираем данные формы
-                    const formData = {
-                        fio: document.getElementById('fio').value.trim(),
-                        phone: document.getElementById('phone').value.trim(),
-                        address: document.getElementById('address').value.trim(),
-                        quantity: document.getElementById('quantity').value,
-                        timestamp: new Date().toISOString()
-                    };
-                    
-                    console.log('Отправляемые данные:', formData);
-                    
-                    // Отправляем данные через Telegram WebApp
-                    setTimeout(function() {
-                        try {
-                            if (tg && typeof tg.sendData === 'function') {
-                                tg.sendData(JSON.stringify(formData));
-                                console.log('Данные отправлены через WebApp');
-                            } else {
-                                // Для тестирования
-                                console.log('Данные для отправки:', formData);
-                                alert('Заказ оформлен: ' + JSON.stringify(formData));
-                            }
-                            
-                            // Закрываем WebApp
-                            if (tg && typeof tg.close === 'function') {
-                                setTimeout(function() {
-                                    tg.close();
-                                }, 500);
-                            }
-                            
-                        } catch (error) {
-                            console.error('Ошибка отправки:', error);
-                            alert('Ошибка отправки заказа');
-                            document.getElementById('submitBtn').disabled = false;
-                            document.getElementById('loading').style.display = 'none';
-                        }
-                    }, 1000);
-                }
-            });
-            
-            // Функция показа информации о продукте
-            function showProductInfo(initData) {
-                const productInfo = document.getElementById('productInfo');
-                const startParam = tg?.startParam || initData.start_param;
-                
-                if (startParam) {
-                    try {
-                        const productData = JSON.parse(decodeURIComponent(startParam));
-                        
-                        if (productData.title) {
-                            document.getElementById('productTitle').textContent = productData.title;
-                        }
-                        if (productData.description) {
-                            document.getElementById('productDescription').textContent = productData.description;
-                        }
-                        if (productData.price) {
-                            document.getElementById('productPrice').textContent = `💰 ${productData.price} руб.`;
-                        }
-                        if (productData.image) {
-                            document.getElementById('productImage').src = productData.image;
-                        }
-                        
-                        productInfo.style.display = 'block';
-                        
-                    } catch (e) {
-                        console.warn('Не удалось распарсить start_param:', e);
-                    }
-                }
-            }
-            
-            // Функция валидации формы
-            function validateForm() {
-                let isValid = true;
-                
-                // Сбрасываем ошибки
-                document.querySelectorAll('.error').forEach(el => {
-                    el.style.display = 'none';
-                });
-                
-                // Проверяем обязательные поля
                 const fio = document.getElementById('fio').value.trim();
-                const phone = document.getElementById('phone').value.trim();
-                const quantity = document.getElementById('quantity').value;
+                const choice = document.getElementById('choice').value;
                 
-                if (!fio) {
-                    document.getElementById('fioError').style.display = 'block';
-                    isValid = false;
+                if (!fio || !choice) {
+                    alert('Пожалуйста, заполните все поля');
+                    return;
                 }
                 
-                if (!phone) {
-                    document.getElementById('phoneError').style.display = 'block';
-                    isValid = false;
-                }
+                const formData = {
+                    fio: fio,
+                    choice: choice,
+                    timestamp: new Date().toISOString(),
+                    // Добавляем параметры из URL
+                    urlParams: getUrlParams()
+                };
                 
-                if (!quantity) {
-                    document.getElementById('quantityError').style.display = 'block';
-                    isValid = false;
-                }
-                
-                return isValid;
-            }
+                sendDataToTelegram(formData);
+            });
         });
     </script>
 </body>
