@@ -76,10 +76,23 @@
             margin-top: 20px;
         }
         
+        .test-button {
+            background-color: #888;
+            margin-top: 10px;
+        }
+        
         .error {
             color: #ff3333;
             font-size: 14px;
             margin-top: 4px;
+            display: none;
+        }
+        
+        .test-info {
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 20px;
             display: none;
         }
     </style>
@@ -136,22 +149,40 @@
                 <div class="error" id="quantityError">Введите число от 1 до 5</div>
             </div>
             
-            <button type="submit">Отправить заказ</button>
+            <button type="submit" id="submitButton">Отправить заказ</button>
+            
+            <button type="button" id="testButton" class="test-button">Тест (для компьютера)</button>
         </form>
+        
+        <div id="testInfo" class="test-info">
+            <h3>ℹ️ Информация для тестирования</h3>
+            <p>Web App работает только в мобильном приложении Telegram. На компьютере используйте кнопку "Тест".</p>
+            <p>Данные формы:</p>
+            <pre id="testData"></pre>
+        </div>
     </div>
 
     <script>
-        // Инициализация Telegram Web App
-        Telegram.WebApp.ready();
-        Telegram.WebApp.expand();
+        // Проверяем, запущено ли в Telegram Web App
+        const isTelegramWebApp = typeof Telegram !== 'undefined' && Telegram.WebApp;
         
-        // Получаем параметры из URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const fullnameFromUrl = urlParams.get('fullname');
-        
-        // Если есть ФИО в URL, подставляем его
-        if (fullnameFromUrl && fullnameFromUrl !== 'None') {
-            document.getElementById('fullname').value = decodeURIComponent(fullnameFromUrl);
+        if (isTelegramWebApp) {
+            // Инициализация Telegram Web App
+            Telegram.WebApp.ready();
+            Telegram.WebApp.expand();
+            
+            // Получаем параметры из URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const fullnameFromUrl = urlParams.get('fullname');
+            
+            // Если есть ФИО в URL, подставляем его
+            if (fullnameFromUrl && fullnameFromUrl !== 'None') {
+                document.getElementById('fullname').value = decodeURIComponent(fullnameFromUrl);
+            }
+        } else {
+            // Показываем информацию для тестирования на компьютере
+            document.getElementById('testInfo').style.display = 'block';
+            document.getElementById('testButton').style.display = 'block';
         }
         
         // Показываем/скрываем поле периода
@@ -203,14 +234,8 @@
             return isValid;
         }
         
-        // Обработка отправки формы
-        document.getElementById('orderForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            if (!validateForm()) {
-                return;
-            }
-            
+        // Функция получения данных формы
+        function getFormData() {
             const formData = {
                 fullname: document.getElementById('fullname').value.trim(),
                 building: document.getElementById('building').value,
@@ -227,8 +252,36 @@
                 };
             }
             
-            // Отправляем данные в Telegram
-            Telegram.WebApp.sendData(JSON.stringify(formData));
+            return formData;
+        }
+        
+        // Обработка отправки формы (для Telegram)
+        document.getElementById('orderForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (!validateForm()) {
+                return;
+            }
+            
+            const formData = getFormData();
+            
+            if (isTelegramWebApp) {
+                // Отправляем данные в Telegram
+                Telegram.WebApp.sendData(JSON.stringify(formData));
+                Telegram.WebApp.close();
+            }
+        });
+        
+        // Обработка тестовой кнопки (для компьютера)
+        document.getElementById('testButton').addEventListener('click', function() {
+            if (!validateForm()) {
+                return;
+            }
+            
+            const formData = getFormData();
+            document.getElementById('testData').textContent = JSON.stringify(formData, null, 2);
+            
+            alert('Данные формы (для тестирования):\n' + JSON.stringify(formData, null, 2));
         });
     </script>
 </body>
