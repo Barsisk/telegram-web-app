@@ -3,231 +3,791 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Форма заказа</title>
+    <title>Информационный портал</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #1e4158 0%, #182c3d 100%);
+            color: #e6e6e6;
+            line-height: 1.6;
             min-height: 100vh;
             padding: 20px;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
+            justify-content: center;
         }
         
         .container {
-            background: white;
-            border-radius: 15px;
-            padding: 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
             width: 100%;
-            max-width: 450px;
+            max-width: 1000px;
+            background-color: rgba(32, 47, 62, 0.85);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(5px);
+            margin: 20px;
         }
         
-        .header {
+        header {
+            background-color: #2a3f54;
+            color: white;
             text-align: center;
-            margin-bottom: 20px;
+            padding: 2rem 0;
+            position: relative;
+            border-bottom: 1px solid #3a506b;
         }
         
-        .header h1 {
-            color: #333;
-            font-size: 22px;
-            margin-bottom: 10px;
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         }
         
-        .bot-data {
-            background: #f8f9fa;
-            padding: 15px;
+        .logo {
+            position: absolute;
+            top: 20px;
+            left: 30px;
+            font-size: 2rem;
+            color: #0088cc;
+        }
+        
+        .content {
+            padding: 3rem 2rem;
+            position: relative;
+            padding-bottom: 6rem;
+        }
+        
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+        
+        .tg-button {
+            background: linear-gradient(to right, #0088cc, #00a2e4);
+            color: white;
+            border: none;
+            padding: 1.2rem 2.5rem;
+            font-size: 1.2rem;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 220px;
+            text-align: center;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(0, 136, 204, 0.3);
+        }
+        
+        .tg-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 136, 204, 0.5);
+        }
+        
+        .tg-button:active {
+            transform: translateY(-1px);
+        }
+        
+        .tg-button.students {
+            background: linear-gradient(to right, #34aa44, #46c755);
+            box-shadow: 0 4px 15px rgba(52, 170, 68, 0.3);
+        }
+        
+        .tg-button.students:hover {
+            box-shadow: 0 6px 20px rgba(52, 170, 68, 0.5);
+        }
+        
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 3rem;
+            flex-wrap: wrap;
+            position: absolute;
+            bottom: 1rem;
+            left: 0;
+            right: 0;
+            padding: 0 2rem;
+        }
+        
+        .social-link {
+            background: linear-gradient(to right, #3a506b, #4d648d);
+            color: white;
+            padding: 0.8rem 1.5rem;
             border-radius: 10px;
-            margin-bottom: 20px;
-            border-left: 4px solid #007bff;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            font-size: 1rem;
         }
         
-        .bot-data h3 {
-            margin: 0 0 10px 0;
-            color: #333;
+        .social-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            background: linear-gradient(to right, #4d648d, #5a75a0);
         }
         
-        .bot-image {
-            width: 100%;
-            max-height: 200px;
-            object-fit: cover;
+        .options-container {
+            display: none;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+            padding: 2rem;
+            background-color: rgba(42, 57, 76, 0.6);
+            border-radius: 14px;
+        }
+        
+        .option-buttons {
+            display: none;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+            padding: 2rem;
+            background-color: rgba(42, 57, 76, 0.6);
+            border-radius: 14px;
+        }
+        
+        .option-button {
+            background: linear-gradient(135deg, #2a3f54 0%, #1e2f41 100%);
+            color: white;
+            border: 1px solid #3a506b;
+            padding: 1.5rem;
+            font-size: 1.1rem;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .option-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(135deg, #31485f 0%, #223447 100%);
+        }
+        
+        .option-button i {
+            font-size: 2rem;
+            color: #0088cc;
+        }
+        
+        .option-content {
+            display: none;
+            padding: 2rem;
+            background-color: rgba(42, 57, 76, 0.6);
+            border-radius: 14px;
+            margin-top: 2rem;
+            animation: fadeIn 0.5s ease forwards;
+            margin-bottom: 2rem;
+        }
+        
+        .option-title {
+            font-size: 1.8rem;
+            color: #ffffff;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 2px solid #0088cc;
+        }
+        
+        .option-text {
+            color: #c8d0d9;
+            font-size: 1.1rem;
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+        }
+        
+        .info-section {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: rgba(35, 48, 68, 0.5);
             border-radius: 10px;
-            margin-bottom: 15px;
-            border: 2px solid #ddd;
+            border-left: 4px solid #0088cc;
         }
         
-        .form-group {
-            margin-bottom: 15px;
+        .info-title {
+            font-size: 1.4rem;
+            color: #ffffff;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         
-        label {
-            display: block;
-            margin-bottom: 5px;
-            color: #333;
+        .info-list {
+            list-style-type: none;
+            padding-left: 1.5rem;
+        }
+        
+        .info-list li {
+            margin-bottom: 0.8rem;
+            position: relative;
+            padding-left: 1.5rem;
+        }
+        
+        .info-list li:before {
+            content: "•";
+            color: #0088cc;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+            font-size: 1.2rem;
+        }
+        
+        .highlight {
+            background: rgba(0, 136, 204, 0.2);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
             font-weight: 500;
         }
         
-        input, select {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            font-size: 16px;
+        .specialty-list {
+            list-style-type: none;
+            padding-left: 1rem;
         }
         
-        .submit-btn {
-            width: 100%;
-            padding: 12px;
-            background: #28a745;
+        .specialty-list li {
+            margin-bottom: 0.5rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+        
+        .specialty-list li:before {
+            content: "—";
+            color: #0088cc;
+            position: absolute;
+            left: 0;
+        }
+        
+        .back-button {
+            background: linear-gradient(to right, #6c757d, #868e96);
             color: white;
             border: none;
-            border-radius: 6px;
-            font-size: 16px;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            border-radius: 10px;
             cursor: pointer;
-            margin-top: 10px;
+            margin-top: 1.5rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         
-        .error {
-            color: #dc3545;
-            font-size: 12px;
-            margin-top: 5px;
-            display: none;
+        .back-button:hover {
+            background: linear-gradient(to right, #5a6268, #727b84);
+            transform: translateY(-2px);
+        }
+        
+        /* Адаптивность для мобильных устройств */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .logo {
+                position: relative;
+                top: 0;
+                left: 0;
+                margin-bottom: 15px;
+            }
+            
+            .button-container {
+                flex-direction: column;
+                align-items: center;
+                gap: 1.5rem;
+            }
+            
+            .tg-button {
+                width: 100%;
+                max-width: 300px;
+                padding: 1rem 1.5rem;
+                font-size: 1.1rem;
+            }
+            
+            .social-links {
+                flex-direction: column;
+                align-items: center;
+                position: relative;
+                margin-top: 2rem;
+                gap: 1rem;
+            }
+            
+            .social-link {
+                width: 100%;
+                max-width: 280px;
+                justify-content: center;
+                padding: 0.7rem 1.2rem;
+                font-size: 0.9rem;
+            }
+            
+            .option-buttons, .options-container {
+                grid-template-columns: 1fr;
+                padding: 1.2rem;
+                gap: 1rem;
+            }
+            
+            .option-button {
+                padding: 1.2rem;
+                font-size: 1rem;
+            }
+            
+            .option-button i {
+                font-size: 1.5rem;
+            }
+            
+            .content {
+                padding: 1.5rem 1rem;
+                padding-bottom: 2rem;
+            }
+            
+            .option-content {
+                padding: 1.5rem;
+                margin-top: 1.5rem;
+            }
+            
+            .option-title {
+                font-size: 1.5rem;
+                margin-bottom: 1.2rem;
+            }
+            
+            .option-text {
+                font-size: 1rem;
+                line-height: 1.6;
+                margin-bottom: 1.2rem;
+            }
+            
+            .info-section {
+                padding: 1.2rem;
+                margin-bottom: 1.5rem;
+            }
+            
+            .info-title {
+                font-size: 1.2rem;
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+            
+            .info-list {
+                padding-left: 1.2rem;
+            }
+            
+            .info-list li {
+                padding-left: 1.2rem;
+                margin-bottom: 0.6rem;
+                font-size: 0.95rem;
+            }
+            
+            .specialty-list {
+                padding-left: 0.8rem;
+            }
+            
+            .specialty-list li {
+                padding-left: 1.2rem;
+                font-size: 0.9rem;
+            }
+            
+            .highlight {
+                padding: 0.15rem 0.4rem;
+                font-size: 0.9rem;
+            }
+            
+            .back-button {
+                padding: 0.8rem 1.5rem;
+                font-size: 1rem;
+                margin-top: 1.2rem;
+            }
+        }
+
+        /* Дополнительные стили для очень маленьких экранов */
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            
+            .container {
+                margin: 10px;
+                border-radius: 12px;
+            }
+            
+            header {
+                padding: 1.5rem 0;
+            }
+            
+            .content {
+                padding: 1rem 0.8rem;
+                padding-bottom: 2rem;
+            }
+            
+            .option-content {
+                padding: 1.2rem;
+            }
+            
+            .info-section {
+                padding: 1rem;
+            }
+            
+            .info-list {
+                padding-left: 1rem;
+            }
+            
+            .info-list li {
+                padding-left: 1rem;
+            }
+            
+            .specialty-list li {
+                padding-left: 1rem;
+            }
+            
+            .button-container {
+                margin: 1.5rem 0;
+            }
+        }
+        
+        /* Анимации */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Блок для данных от бота -->
-        <div id="botData" class="bot-data" style="display: none;">
-            <h3>📨 Данные от бота:</h3>
-            <div id="botMessage"></div>
-            <img id="botImage" class="bot-image" alt="Изображение от бота">
-        </div>
+        <header>
+            <div class="logo">
+                <i class="fab fa-telegram"></i>
+            </div>
+            <h1>Информация</h1>
+        </header>
         
-        <div class="header">
-            <h1>📋 Форма заказа</h1>
-            <p id="userInfo"></p>
-        </div>
-        
-        <form id="dataForm">
-            <div class="form-group">
-                <label for="fio">ФИО:</label>
-                <input type="text" id="fio" name="fio" required placeholder="Иванов Иван Иванович">
-                <div id="fioError" class="error">Пожалуйста, введите ФИО</div>
+        <div class="content">
+            <div class="button-container">
+                <a href="#" class="tg-button students" id="students-btn">
+                    <i class="fas fa-user-graduate"></i> Для студентов
+                </a>
+                <a href="#" class="tg-button" id="applicants-btn">
+                    <i class="fas fa-users"></i> Для поступающих
+                </a>
             </div>
             
-            <div class="form-group">
-                <label for="choice">Выберите вариант:</label>
-                <select id="choice" name="choice" required>
-                    <option value="">-- Выберите --</option>
-                    <option value="1">Вариант 1</option>
-                    <option value="2">Вариант 2</option>
-                </select>
-                <div id="choiceError" class="error">Пожалуйста, выберите вариант</div>
+            <!-- Кнопки вариантов для студентов -->
+            <div id="students-options" class="option-buttons">
+                <div class="option-button" data-target="student-option1">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>Вариант 1</span>
+                </div>
+                <div class="option-button" data-target="student-option2">
+                    <i class="fas fa-book"></i>
+                    <span>Вариант 2</span>
+                </div>
+                <div class="option-button" data-target="student-option3">
+                    <i class="fas fa-flask"></i>
+                    <span>Вариант 3</span>
+                </div>
+                <div class="option-button" data-target="student-option4">
+                    <i class="fas fa-hand-holding-usd"></i>
+                    <span>Вариант 4</span>
+                </div>
+                <button class="back-button" onclick="goBackToMain()">
+                    <i class="fas fa-arrow-left"></i> Назад
+                </button>
             </div>
             
-            <button type="submit" class="submit-btn">📤 Отправить заказ</button>
-        </form>
+            <!-- Контент вариантов для студентов -->
+            <div id="student-option1" class="option-content">
+                <h2 class="option-title">Расписание занятий</h2>
+                <p class="option-text">Вариант 1</p>
+                <p class="option-text">Вариант 1</p>
+                <button class="back-button" onclick="goBackToOptions('students')">
+                    <i class="fas fa-arrow-left"></i> Назад к вариантам
+                </button>
+            </div>
+            
+            <div id="student-option2" class="option-content">
+                <h2 class="option-title">Учебные материалы</h2>
+                <p class="option-text">Вариант 2</p>
+                <p class="option-text">Вариант 2</p>
+                <button class="back-button" onclick="goBackToOptions('students')">
+                    <i class="fas fa-arrow-left"></i> Назад к вариантам
+                </button>
+            </div>
+            
+            <div id="student-option3" class="option-content">
+                <h2 class="option-title">Научная деятельность</h2>
+                <p class="option-text">Вариант 3</p>
+                <p class="option-text">Вариант 3</p>
+                <button class="back-button" onclick="goBackToOptions('students')">
+                    <i class="fas fa-arrow-left"></i> Назад к вариантам
+                </button>
+            </div>
+            
+            <div id="student-option4" class="option-content">
+                <h2 class="option-title">Стипендии и поддержка</h2>
+                <p class="option-text">Вариант 4</p>
+                <p class="option-text">Вариант 4</p>
+                <button class="back-button" onclick="goBackToOptions('students')">
+                    <i class="fas fa-arrow-left"></i> Назад к вариантам
+                </button>
+            </div>
+            
+            <!-- Кнопки вариантов для поступающих -->
+            <div id="applicants-options" class="option-buttons">
+                <div class="option-button" data-target="applicant-option1">
+                    <i class="fas fa-file-alt"></i>
+                    <span>Приёмная комиссия</span>
+                </div>
+                <div class="option-button" data-target="applicant-option2">
+                    <i class="fas fa-chalkboard-teacher"></i>
+                    <span>Общежитие</span>
+                </div>
+                <div class="option-button" data-target="applicant-option3">
+                    <i class="fas fa-pencil-alt"></i>
+                    <span>Вариант 3</span>
+                </div>
+                <div class="option-button" data-target="applicant-option4">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Вариант 4</span>
+                </div>
+                <button class="back-button" onclick="goBackToMain()">
+                    <i class="fas fa-arrow-left"></i> Назад
+                </button>
+            </div>
+            
+            <!-- Контент вариантов для поступающих -->
+            <div id="applicant-option1" class="option-content">
+                <h2 class="option-title">Приёмная комиссия</h2>
+                
+                <div class="info-section">
+                    <h3 class="info-title">🗓️ Сроки приема документов (2025-2026 уч. год)</h3>
+                    <ul class="info-list">
+                        <li>Начало приема: <span class="highlight">19 июня</span></li>
+                        <li>Очная форма (бюджет): <span class="highlight">до 15 августа</span></li>
+                        <li>Очная форма (платно): <span class="highlight">с 16 августа</span></li>
+                        <li>Заочная форма: <span class="highlight">до 25 августа</span></li>
+                        <li>Для специальностей с особыми требованиями (Защита в ЧС, Повар): <span class="highlight">до 6 августа</span></li>
+                    </ul>
+                    
+                    <h3 class="info-title">📅 Важные даты:</h3>
+                    <ul class="info-list">
+                        <li><span class="highlight">16 августа</span>: последний день приема оригиналов аттестатов</li>
+                        <li><span class="highlight">18 августа</span>: издание приказа о зачислении</li>
+                        <li><span class="highlight">19 августа</span>: публикация списков зачисленных</li>
+                    </ul>
+                </div>
+                
+                <div class="info-section">
+                    <h3 class="info-title">📄 Необходимые документы</h3>
+                    <ul class="info-list">
+                        <li>Заявление (бланк на сайте)</li>
+                        <li>Оригинал или копия аттестата</li>
+                        <li>Копия паспорта (с пропиской)</li>
+                        <li>4 фотографии 3x4 см</li>
+                        <li>Медицинская справка (086-у) требуется только для специальностей:
+                            <ul class="specialty-list">
+                                <li>20.02.02 Защита в чрезвычайных ситуациях</li>
+                                <li>43.01.15 / 43.02.15 Поварское и кондитерское дело</li>
+                                <li>16675 Повар</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="info-section">
+                    <h3 class="info-title">⚙️ Вступительные испытания (только для 20.02.02 Защита в ЧС)</h3>
+                    <ul class="info-list">
+                        <li>Когда: <span class="highlight">с 7 по 12 августа</span></li>
+                        <li>Что входит:
+                            <ul class="specialty-list">
+                                <li>Физподготовка: бег (500 м/1000 м), отжимания/подтягивания, прыжок в длину</li>
+                                <li>Психологическая диагностика (для сдавших физнормативы)</li>
+                            </ul>
+                        </li>
+                        <li>Результаты публикуются <span class="highlight">до 14 августа</span></li>
+                    </ul>
+                </div>
+                
+                <div class="info-section">
+                    <h3 class="info-title">💰 Внебюджетное (платное) обучение</h3>
+                    <ul class="info-list">
+                        <li>Подача документов и заключение договора — <span class="highlight">с 16 августа</span> (при наличии мест)</li>
+                        <li>Образцы договоров доступны на сайте</li>
+                    </ul>
+                </div>
+                
+                <button class="back-button" onclick="goBackToOptions('applicants')">
+                    <i class="fas fa-arrow-left"></i> Назад к вариантам
+                </button>
+            </div>
+            
+            <div id="applicant-option2" class="option-content">
+                <h2 class="option-title">🏠 Общежитие</h2>
+                
+                <div class="info-section">
+                    <h3 class="info-title">ℹ️ Важная информация</h3>
+                    <ul class="info-list">
+                        <li><strong>У самого колледжа своего общежития нет</strong></li>
+                        <li>Места для студентов предоставляет <strong>ГБУ «Управление общежитиями СПО ПК»</strong></li>
+                    </ul>
+                </div>
+                
+                <div class="info-section">
+                    <h3 class="info-title">📍 Распределение мест на 2025-2026 учебный год</h3>
+                    <ul class="info-list">
+                        <li><strong>Всего выделено: 84 места</strong></li>
+                        <li>г. Соликамск, ул. Калийная, д. 127, 129 — <span class="highlight">35 мест</span></li>
+                        <li>с. Тохтуева, ул. Студенческая, д. 2 — <span class="highlight">25 мест</span></li>
+                        <li>г. Чердынь, ул. Соборная, 3 «а» — <span class="highlight">24 места</span></li>
+                    </ul>
+                </div>
+                
+                <div class="info-section">
+                    <h3 class="info-title">📄 Документы для заселения (основной список)</h3>
+                    <ul class="info-list">
+                        <li>Копия паспорта (для несовершеннолетних — также копия паспорта родителя)</li>
+                        <li>Копии СНИЛС и медицинского полиса</li>
+                        <li>Справка об отсутствии педикулеза</li>
+                        <li>Флюорография (талон или справка)</li>
+                        <li>1 фотография 3x4 см</li>
+                        <li>Оплата найма и коммунальных услуг за год (вносится в день заселения)</li>
+                    </ul>
+                </div>
+                
+                <div class="info-section">
+                    <h3 class="info-title">📝 Примечание</h3>
+                    <ul class="info-list">
+                        <li>Постельное белье (подушки, одеяла) предоставляются</li>
+                        <li>Бытовую технику можно привозить только с документами, отвечающими требованиям пожарной безопасности</li>
+                    </ul>
+                </div>
+                
+                <button class="back-button" onclick="goBackToOptions('applicants')">
+                    <i class="fas fa-arrow-left"></i> Назад к вариантам
+                </button>
+            </div>
+            
+            <div id="applicant-option3" class="option-content">
+                <h2 class="option-title">Вступительные испытания</h2>
+                <p class="option-text">Вариант 3</p>
+                <p class="option-text">Вариант 3</p>
+                <button class="back-button" onclick="goBackToOptions('applicants')">
+                    <i class="fas fa-arrow-left"></i> Назад к вариантам
+                </button>
+            </div>
+            
+            <div id="applicant-option4" class="option-content">
+                <h2 class="option-title">Проходные баллы</h2>
+                <p class="option-text">Вариант 4</p>
+                <p class="option-text">Вариант 4</p>
+                <button class="back-button" onclick="goBackToOptions('applicants')">
+                    <i class="fas fa-arrow-left"></i> Назад к вариантам
+                </button>
+            </div>
+            
+            <!-- Ссылки на социальные сети внизу страницы -->
+            <div class="social-links">
+                <a href="https://t.me/+LYl_2XOcnvQ5Mjky" target="_blank" class="social-link">
+                    <i class="fab fa-telegram"></i> Группа колледжа в Telegram
+                </a>
+                <a href="https://vk.com/solapk" target="_blank" class="social-link">
+                    <i class="fab fa-vk"></i> Группа колледжа ВКонтакте
+                </a>
+            </div>
+        </div>
     </div>
 
     <script>
-        // Функция для получения параметров из URL
-        function getUrlParams() {
-            const params = {};
-            const queryString = window.location.search.substring(1);
-            const pairs = queryString.split('&');
-            
-            for (const pair of pairs) {
-                const [key, value] = pair.split('=');
-                if (key && value) {
-                    params[decodeURIComponent(key)] = decodeURIComponent(value);
-                }
-            }
-            return params;
-        }
-        
-        // Функция для отправки данных обратно в Telegram
-        function sendDataToTelegram(formData) {
-            // Для встроенного бота используем Telegram WebApp API если доступно
-            if (window.Telegram && window.Telegram.WebApp) {
-                try {
-                    const tg = window.Telegram.WebApp;
-                    tg.sendData(JSON.stringify(formData));
-                    tg.close();
-                } catch (error) {
-                    console.error('Ошибка отправки через WebApp:', error);
-                    // Альтернативный метод для встроенных ботов
-                    alert('Данные готовы к отправке: ' + JSON.stringify(formData));
-                }
-            } else {
-                // Если WebApp не доступен (прямой переход по ссылке)
-                alert('Данные формы: ' + JSON.stringify(formData));
-            }
-        }
-        
-        // Функция для отображения данных от бота
-        function displayBotData() {
-            const params = getUrlParams();
-            
-            // Показываем информацию о пользователе если есть
-            if (params.user) {
-                document.getElementById('userInfo').textContent = `Пользователь: ${params.user}`;
-            }
-            
-            if (params.message || params.image) {
-                const botDataDiv = document.getElementById('botData');
-                const botMessageDiv = document.getElementById('botMessage');
-                const botImage = document.getElementById('botImage');
-                
-                if (params.message) {
-                    botMessageDiv.textContent = params.message;
-                }
-                
-                if (params.image) {
-                    botImage.src = params.image;
-                    botImage.style.display = 'block';
-                } else {
-                    botImage.style.display = 'none';
-                }
-                
-                botDataDiv.style.display = 'block';
-            }
-        }
-        
-        // Инициализация при загрузке
+        // Обработка навигации
         document.addEventListener('DOMContentLoaded', function() {
-            displayBotData();
-            
-            const form = document.getElementById('dataForm');
-            form.addEventListener('submit', function(e) {
+            // Обработчики для основных кнопок
+            document.getElementById('students-btn').addEventListener('click', function(e) {
                 e.preventDefault();
-                
-                const fio = document.getElementById('fio').value.trim();
-                const choice = document.getElementById('choice').value;
-                
-                if (!fio || !choice) {
-                    alert('Пожалуйста, заполните все поля');
-                    return;
-                }
-                
-                const formData = {
-                    fio: fio,
-                    choice: choice,
-                    timestamp: new Date().toISOString(),
-                    // Добавляем параметры из URL
-                    urlParams: getUrlParams()
-                };
-                
-                sendDataToTelegram(formData);
+                showOptions('students');
+            });
+            
+            document.getElementById('applicants-btn').addEventListener('click', function(e) {
+                e.preventDefault();
+                showOptions('applicants');
+            });
+            
+            // Обработчики для кнопок вариантов
+            document.querySelectorAll('.option-button').forEach(button => {
+                button.addEventListener('click', function() {
+                    const targetId = this.getAttribute('data-target');
+                    showContent(targetId);
+                });
             });
         });
+        
+        function showOptions(category) {
+            // Скрыть все
+            hideAll();
+            
+            // Показать соответствующие варианты
+            document.getElementById(`${category}-options`).style.display = 'grid';
+            
+            // Прокрутить к вариантам
+            document.getElementById(`${category}-options`).scrollIntoView({behavior: 'smooth'});
+        }
+        
+        function showContent(contentId) {
+            // Скрыть все
+            hideAll();
+            
+            // Показать выбранный контент
+            document.getElementById(contentId).style.display = 'block';
+            
+            // Прокрутить к контенту
+            document.getElementById(contentId).scrollIntoView({behavior: 'smooth'});
+        }
+        
+        function goBackToOptions(category) {
+            // Скрыть все
+            hideAll();
+            
+            // Показать соответствующие варианты
+            document.getElementById(`${category}-options`).style.display = 'grid';
+            
+            // Прокрутить к вариантам
+            document.getElementById(`${category}-options`).scrollIntoView({behavior: 'smooth'});
+        }
+        
+        function goBackToMain() {
+            // Скрыть все
+            hideAll();
+            
+            // Прокрутить к верху страницы
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+        
+        function hideAll() {
+            // Скрыть все варианты и контент
+            document.querySelectorAll('.option-buttons, .option-content').forEach(element => {
+                element.style.display = 'none';
+            });
+        }
     </script>
 </body>
 </html>
