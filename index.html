@@ -61,7 +61,7 @@
             background: var(--tg-theme-button-color, #2ea6ff);
             color: var(--tg-theme-button-text-color, #ffffff);
             border: none;
-            padding: 12px 30px;
+            padding: 15px 35px;
             border-radius: 10px;
             font-size: 16px;
             font-weight: 500;
@@ -69,6 +69,8 @@
             transition: all 0.2s ease;
             text-decoration: none;
             display: inline-block;
+            width: 100%;
+            max-width: 200px;
         }
 
         .back-button:hover {
@@ -128,6 +130,21 @@
             .subtitle {
                 font-size: 14px;
             }
+            
+            .back-button {
+                padding: 16px 30px;
+                font-size: 17px;
+            }
+        }
+
+        /* Стиль для тач-устройств */
+        @media (hover: none) and (pointer: coarse) {
+            .back-button {
+                min-height: 50px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
         }
     </style>
 </head>
@@ -141,38 +158,120 @@
         
         <p class="subtitle">
             Эта функция находится в разработке. <br>
+            Мы работаем над тем, чтобы сделать её ещё лучше для вас!
         </p>
         
-        <a href="javascript:history.back()" class="back-button">Назад в Telegram</a>
+        <button class="back-button" onclick="goBack()">Назад в Telegram</button>
     </div>
 
     <script>
-        // Определяем тему Telegram
+        // Функция для возврата назад
+        function goBack() {
+            console.log('Кнопка нажата');
+            
+            // Проверяем, открыты ли мы в Telegram WebView
+            if (window.Telegram && window.Telegram.WebApp) {
+                console.log('Закрываем Telegram WebView');
+                window.Telegram.WebApp.close();
+            } 
+            // Проверяем, открыты ли мы в iframe (типично для Telegram)
+            else if (window.parent !== window) {
+                console.log('Пытаемся закрыть iframe');
+                // Пытаемся отправить сообщение родительскому окну
+                try {
+                    window.parent.postMessage('close_webview', '*');
+                } catch (e) {
+                    console.log('Ошибка при отправке сообщения:', e);
+                }
+                
+                // Пробуем закрыться
+                try {
+                    window.close();
+                } catch (e) {
+                    console.log('Окно не может быть закрыто скриптом');
+                    // Если не получается закрыть окно, пробуем вернуться назад
+                    if (window.history.length > 1) {
+                        window.history.back();
+                    } else {
+                        // Если истории нет, показываем сообщение
+                        alert('Нажмите кнопку "Назад" в вашем браузере');
+                    }
+                }
+            }
+            // Стандартный браузер
+            else {
+                console.log('Стандартный возврат назад');
+                if (window.history.length > 1) {
+                    window.history.back();
+                } else {
+                    // Если мы на первой странице, пытаемся закрыть вкладку
+                    try {
+                        window.close();
+                    } catch (e) {
+                        alert('Нажмите кнопку "Назад" в вашем браузере');
+                    }
+                }
+            }
+        }
+
+        // Также добавляем обработчик для физической кнопки "назад" на Android
         document.addEventListener('DOMContentLoaded', function() {
-            // Проверяем, открыта ли страница в Telegram WebView
+            // Инициализация Telegram WebApp если доступно
             if (window.Telegram && window.Telegram.WebApp) {
                 const webApp = window.Telegram.WebApp;
-                
-                // Расширяем страницу на весь экран
                 webApp.expand();
+                webApp.enableClosingConfirmation();
                 
                 // Применяем тему Telegram
-                document.body.style.setProperty('--tg-theme-bg-color', webApp.themeParams.bg_color || '#182533');
-                document.body.style.setProperty('--tg-theme-text-color', webApp.themeParams.text_color || '#ffffff');
-                document.body.style.setProperty('--tg-theme-hint-color', webApp.themeParams.hint_color || '#7f8a93');
-                document.body.style.setProperty('--tg-theme-button-color', webApp.themeParams.button_color || '#2ea6ff');
-                document.body.style.setProperty('--tg-theme-button-text-color', webApp.themeParams.button_text_color || '#ffffff');
-                document.body.style.setProperty('--tg-theme-secondary-bg-color', webApp.themeParams.secondary_bg_color || '#2a3b4c');
+                applyTelegramTheme(webApp);
+                
+                // Обработчик кнопки "назад" на Android
+                webApp.BackButton.onClick(goBack);
+                webApp.BackButton.show();
+            }
+            
+            // Добавляем обработчик touch events для лучшей реакции на мобильных
+            const backButton = document.querySelector('.back-button');
+            if (backButton) {
+                backButton.addEventListener('touchend', function(e) {
+                    e.preventDefault();
+                    goBack();
+                });
+                
+                backButton.addEventListener('click', goBack);
             }
         });
 
-        // Альтернативный способ возврата назад
-        function goBack() {
-            if (window.Telegram && window.Telegram.WebApp) {
-                window.Telegram.WebApp.close();
-            } else {
-                window.history.back();
+        function applyTelegramTheme(webApp) {
+            document.body.style.setProperty('--tg-theme-bg-color', webApp.themeParams.bg_color || '#182533');
+            document.body.style.setProperty('--tg-theme-text-color', webApp.themeParams.text_color || '#ffffff');
+            document.body.style.setProperty('--tg-theme-hint-color', webApp.themeParams.hint_color || '#7f8a93');
+            document.body.style.setProperty('--tg-theme-button-color', webApp.themeParams.button_color || '#2ea6ff');
+            document.body.style.setProperty('--tg-theme-button-text-color', webApp.themeParams.button_text_color || '#ffffff');
+            document.body.style.setProperty('--tg-theme-secondary-bg-color', webApp.themeParams.secondary_bg_color || '#2a3b4c');
+        }
+
+        // Обработчик сообщений от родительского окна (если мы в iframe)
+        window.addEventListener('message', function(event) {
+            if (event.data === 'close' || event.data.type === 'close') {
+                goBack();
             }
+        });
+
+        // Дополнительная проверка на мобильные устройства
+        function isMobile() {
+            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        }
+
+        // Увеличиваем область нажатия для мобильных
+        if (isMobile()) {
+            document.addEventListener('DOMContentLoaded', function() {
+                const button = document.querySelector('.back-button');
+                if (button) {
+                    button.style.padding = '18px 35px';
+                    button.style.minHeight = '55px';
+                }
+            });
         }
     </script>
 </body>
