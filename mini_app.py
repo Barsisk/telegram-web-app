@@ -1,85 +1,56 @@
 import streamlit as st
-import requests
-import json
-import os
-from dotenv import load_dotenv
+import time
+import urllib.parse
 
-# Загружаем переменные окружения
-load_dotenv()
+st.set_page_config(page_title="Mini App", layout="centered")
 
-# Получаем токен бота
-BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
+# Заголовок
+st.title("📱 Простое Mini App")
+st.write("Эта страница открывается из Telegram")
 
-st.set_page_config(
-    page_title="Telegram Mini App",
-    page_icon="🤖",
-    layout="centered"
-)
+# Простая форма
+name = st.text_input("Как тебя зовут?")
+email = st.text_input("Твой email")
 
-# Функция для получения данных из Telegram WebApp
-def get_init_data():
-    """Получаем данные из Telegram WebApp"""
-    # В реальном приложении данные приходят через query parameters
-    # Для демонстрации используем фиктивные данные
-    return {
-        'user_id': 123456789,
-        'first_name': 'Иван',
-        'last_name': 'Иванов',
-        'username': 'ivanov',
-        'language_code': 'ru'
-    }
+if st.button("💾 Сохранить данные"):
+    if name:
+        # Просто показываем данные
+        st.success("Данные получены!")
+        
+        # Создаем сообщение для отправки
+        current_time = time.strftime("%H:%M:%S")
+        message = f"""
+        📋 Новые данные от пользователя:
+        
+        👤 Имя: {name}
+        📧 Email: {email or 'Не указан'}
+        ⏰ Время: {current_time}
+        
+        Чтобы получить эти данные в Telegram, используй команду /getdata
+        """
+        
+        # Показываем данные
+        st.info(message)
+        
+        # Создаем ссылку для отправки данных через Telegram (простой способ)
+        telegram_text = urllib.parse.quote(message)
+        telegram_url = f"https://t.me/share/url?url=&text={telegram_text}"
+        
+        st.markdown(f'[📤 Поделиться в Telegram]({telegram_url})', unsafe_allow_html=True)
+    else:
+        st.warning("Введи хотя бы имя!")
 
-# Получаем данные пользователя
-init_data = get_init_data()
-
-# Отображаем данные пользователя
-st.title("🤖 Telegram Mini App")
+# Инструкция
 st.divider()
-
-st.subheader("Информация о пользователе:")
-st.write(f"**ID:** {init_data.get('user_id', 'Не указан')}")
-st.write(f"**Имя:** {init_data.get('first_name', 'Не указано')}")
-st.write(f"**Фамилия:** {init_data.get('last_name', 'Не указана')}")
-st.write(f"**Username:** @{init_data.get('username', 'Не указан')}")
-st.write(f"**Язык:** {init_data.get('language_code', 'Не указан')}")
-
-st.divider()
-
-# Кнопка для отправки данных в Telegram
-if st.button("📤 Отправить данные в Telegram", type="primary", use_container_width=True):
-    try:
-        # В реальном приложении вам нужно получить chat_id из данных WebApp
-        # Здесь используем фиктивный chat_id для демонстрации
-        chat_id = init_data.get('user_id')
-        
-        # Подготовка данных для отправки
-        user_data = {
-            "User ID": init_data.get('user_id'),
-            "First Name": init_data.get('first_name'),
-            "Last Name": init_data.get('last_name'),
-            "Username": f"@{init_data.get('username')}",
-            "Language": init_data.get('language_code'),
-            "Platform": "Telegram WebApp"
-        }
-        
-        # Отправляем данные на сервер бота
-        # В реальном приложении лучше использовать веб-хук или API
-        st.success("✅ Данные отправлены в Telegram!")
-        st.json(user_data)
-        
-        # Для реальной интеграции с ботом:
-        # 1. Сохраните данные в базе данных
-        # 2. Отправьте через API бота или веб-хук
-        # 3. Используйте метод send_message бота
-        
-    except Exception as e:
-        st.error(f"Ошибка при отправке данных: {str(e)}")
-
-# Дополнительная информация
-st.divider()
-st.info("""
-    **Как это работает:**
-    1. Пользователь открывает мини-приложение из Telegram
-    2. Приложение получает данные пользователя из Telegram WebApp
-    3. При нажатии кнопки данные отправляются обратно в чат
+st.write("""
+**Как это работает:**
+1. Открой это приложение из Telegram бота
+2. Заполни форму
+3. Нажми кнопку "Сохранить данные"
+4. Используй команду /getdata в боте
 """)
+
+# Альтернатива: QR код для быстрого доступа (опционально)
+st.divider()
+st.write("📲 **Быстрый доступ к боту:**")
+st.code("/start", language="bash")
