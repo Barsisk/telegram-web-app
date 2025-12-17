@@ -1,45 +1,399 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Telegram Mini App</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <title>Мини-приложение авторизации</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
+        * {
             margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             padding: 20px;
-            color: var(--tg-theme-text-color);
-            background-color: var(--tg-theme-bg-color);
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 400px;
+        }
+        
+        .auth-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .logo h1 {
+            color: #333;
+            font-size: 28px;
+            font-weight: 700;
+        }
+        
+        .logo p {
+            color: #666;
+            margin-top: 10px;
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #eee;
+        }
+        
+        .tab {
+            flex: 1;
+            text-align: center;
+            padding: 15px;
+            cursor: pointer;
+            color: #888;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .tab.active {
+            color: #667eea;
+            border-bottom: 3px solid #667eea;
+            margin-bottom: -2px;
+        }
+        
+        .form {
+            display: none;
+        }
+        
+        .form.active {
+            display: block;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+        }
+        
+        .input-group input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        .input-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .message {
+            text-align: center;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            display: none;
+        }
+        
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            display: block;
+        }
+        
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            display: block;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .loading.active {
+            display: block;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
 <body>
-    <h1>Welcome to My Telegram Mini App!</h1>
-    <p>This is a basic example of a Telegram Mini App.</p>
-    <script>
-        let tg = window.Telegram.WebApp;
-        tg.expand();
-        tg.MainButton.setText("Click Me!").show().onClick(function(){
-            tg.showAlert("You clicked the button!");
-        });
-        let tg = window.Telegram.WebApp;
+    <div class="container">
+        <div class="auth-card">
+            <div class="logo">
+                <h1>🔐 Авторизация</h1>
+                <p>Войдите или создайте аккаунт</p>
+            </div>
+            
+            <div class="tabs">
+                <div class="tab active" onclick="showForm('login')">Вход</div>
+                <div class="tab" onclick="showForm('register')">Регистрация</div>
+            </div>
+            
+            <div id="login-form" class="form active">
+                <div class="input-group">
+                    <label for="login-email">Email</label>
+                    <input type="email" id="login-email" placeholder="ваш@email.com">
+                </div>
+                <div class="input-group">
+                    <label for="login-password">Пароль</label>
+                    <input type="password" id="login-password" placeholder="Ваш пароль">
+                </div>
+                <button class="btn" onclick="login()">Войти</button>
+            </div>
+            
+            <div id="register-form" class="form">
+                <div class="input-group">
+                    <label for="register-name">Имя</label>
+                    <input type="text" id="register-name" placeholder="Ваше имя">
+                </div>
+                <div class="input-group">
+                    <label for="register-email">Email</label>
+                    <input type="email" id="register-email" placeholder="ваш@email.com">
+                </div>
+                <div class="input-group">
+                    <label for="register-password">Пароль</label>
+                    <input type="password" id="register-password" placeholder="Придумайте пароль">
+                </div>
+                <div class="input-group">
+                    <label for="register-confirm">Подтвердите пароль</label>
+                    <input type="password" id="register-confirm" placeholder="Повторите пароль">
+                </div>
+                <button class="btn" onclick="register()">Зарегистрироваться</button>
+            </div>
+            
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p style="margin-top: 10px;">Отправка данных...</p>
+            </div>
+            
+            <div class="message" id="message"></div>
+        </div>
+    </div>
 
-        // Получаем и декодируем initData
-        let initData = tg.initData || '';
-        let initDataUnsafe = tg.initDataUnsafe || {};
+    <script>
+        // Telegram WebApp инициализация
+        const tg = window.Telegram.WebApp;
         
-        // Проверяем авторизацию пользователя
-        if (initDataUnsafe.user) {
-            console.log("User is authorized:", initDataUnsafe.user.first_name);
-        } else {
-            console.log("User is not authorized");
+        // Инициализируем WebApp
+        tg.expand();
+        tg.enableClosingConfirmation();
+        
+        function showForm(formName) {
+            // Переключение табов
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            document.querySelectorAll('.form').forEach(form => {
+                form.classList.remove('active');
+            });
+            
+            // Активируем выбранный таб
+            if (formName === 'login') {
+                document.querySelector('.tab:nth-child(1)').classList.add('active');
+                document.getElementById('login-form').classList.add('active');
+            } else {
+                document.querySelector('.tab:nth-child(2)').classList.add('active');
+                document.getElementById('register-form').classList.add('active');
+            }
         }
         
-        // Отправляем данные обратно боту
-        document.getElementById('sendData').addEventListener('click', function() {
-            tg.sendData("Some data from Mini App");
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+        
+        function showMessage(text, type) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.textContent = text;
+            messageDiv.className = 'message ' + type;
+        }
+        
+        function showLoading(show) {
+            document.getElementById('loading').classList.toggle('active', show);
+        }
+        
+        async function login() {
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            
+            if (!validateEmail(email)) {
+                showMessage('Введите корректный email', 'error');
+                return;
+            }
+            
+            if (!password) {
+                showMessage('Введите пароль', 'error');
+                return;
+            }
+            
+            showLoading(true);
+            
+            // Создаем объект с данными
+            const userData = {
+                action: 'login',
+                email: email,
+                timestamp: new Date().toISOString(),
+                tg_user_id: tg.initDataUnsafe?.user?.id,
+                tg_username: tg.initDataUnsafe?.user?.username,
+                first_name: tg.initDataUnsafe?.user?.first_name,
+                last_name: tg.initDataUnsafe?.user?.last_name
+            };
+            
+            try {
+                // Отправляем данные в Telegram бот
+                tg.sendData(JSON.stringify(userData));
+                
+                showMessage('✅ Успешный вход! Данные отправлены в Telegram.', 'success');
+                
+                // Через 2 секунды закрываем приложение
+                setTimeout(() => {
+                    tg.close();
+                }, 2000);
+                
+            } catch (error) {
+                showMessage('❌ Ошибка при отправке данных', 'error');
+                console.error(error);
+            } finally {
+                showLoading(false);
+            }
+        }
+        
+        async function register() {
+            const name = document.getElementById('register-name').value;
+            const email = document.getElementById('register-email').value;
+            const password = document.getElementById('register-password').value;
+            const confirm = document.getElementById('register-confirm').value;
+            
+            if (!name) {
+                showMessage('Введите ваше имя', 'error');
+                return;
+            }
+            
+            if (!validateEmail(email)) {
+                showMessage('Введите корректный email', 'error');
+                return;
+            }
+            
+            if (!password) {
+                showMessage('Введите пароль', 'error');
+                return;
+            }
+            
+            if (password !== confirm) {
+                showMessage('Пароли не совпадают', 'error');
+                return;
+            }
+            
+            if (password.length < 6) {
+                showMessage('Пароль должен быть не менее 6 символов', 'error');
+                return;
+            }
+            
+            showLoading(true);
+            
+            // Создаем объект с данными
+            const userData = {
+                action: 'register',
+                name: name,
+                email: email,
+                timestamp: new Date().toISOString(),
+                tg_user_id: tg.initDataUnsafe?.user?.id,
+                tg_username: tg.initDataUnsafe?.user?.username,
+                first_name: tg.initDataUnsafe?.user?.first_name,
+                last_name: tg.initDataUnsafe?.user?.last_name
+            };
+            
+            try {
+                // Отправляем данные в Telegram бот
+                tg.sendData(JSON.stringify(userData));
+                
+                showMessage('✅ Регистрация успешна! Данные отправлены в Telegram.', 'success');
+                
+                // Через 2 секунды закрываем приложение
+                setTimeout(() => {
+                    tg.close();
+                }, 2000);
+                
+            } catch (error) {
+                showMessage('❌ Ошибка при отправке данных', 'error');
+                console.error(error);
+            } finally {
+                showLoading(false);
+            }
+        }
+        
+        // Автозаполнение данных Telegram, если они есть
+        document.addEventListener('DOMContentLoaded', function() {
+            const tgUser = tg.initDataUnsafe?.user;
+            if (tgUser) {
+                const emailField = document.getElementById('register-email');
+                const nameField = document.getElementById('register-name');
+                
+                if (emailField && tgUser.username) {
+                    emailField.value = `${tgUser.username}@telegram.com`;
+                }
+                
+                if (nameField && tgUser.first_name) {
+                    nameField.value = tgUser.first_name;
+                }
+            }
         });
     </script>
 </body>
