@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mini App - Авторизация</title>
+    <title>Mini App - Уведомление</title>
     <style>
         * {
             margin: 0;
@@ -12,7 +12,7 @@
         }
         
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             display: flex;
@@ -28,331 +28,244 @@
             padding: 40px;
             width: 100%;
             max-width: 400px;
+            text-align: center;
         }
         
         h1 {
             color: #333;
-            margin-bottom: 30px;
-            text-align: center;
-            font-size: 28px;
-        }
-        
-        .form-group {
             margin-bottom: 20px;
+            font-size: 24px;
         }
         
-        label {
-            display: block;
-            margin-bottom: 8px;
-            color: #555;
-            font-weight: 500;
+        .description {
+            color: #666;
+            margin-bottom: 30px;
+            line-height: 1.5;
         }
         
-        input {
-            width: 100%;
-            padding: 12px 16px;
-            border: 2px solid #e1e5e9;
-            border-radius: 10px;
-            font-size: 16px;
-            transition: border-color 0.3s;
-        }
-        
-        input:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-        
-        .btn {
-            width: 100%;
-            padding: 14px;
+        .notification-btn {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
-            border-radius: 10px;
-            font-size: 16px;
+            border-radius: 15px;
+            padding: 18px 30px;
+            font-size: 18px;
             font-weight: 600;
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-            margin-bottom: 15px;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
         
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        .notification-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(102, 126, 234, 0.4);
         }
         
-        .btn-secondary {
-            background: #f1f5f9;
-            color: #475569;
+        .notification-btn:active {
+            transform: translateY(-1px);
         }
         
-        .btn-secondary:hover {
-            background: #e2e8f0;
-            box-shadow: 0 10px 20px rgba(148, 163, 184, 0.3);
+        .notification-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
         }
         
-        .form-toggle {
-            text-align: center;
-            margin-top: 20px;
-            color: #64748b;
-        }
-        
-        .form-toggle a {
-            color: #667eea;
-            text-decoration: none;
-            font-weight: 500;
-            cursor: pointer;
-        }
-        
-        .form-toggle a:hover {
-            text-decoration: underline;
-        }
-        
-        .message {
+        .status {
             padding: 15px;
             border-radius: 10px;
-            margin-bottom: 20px;
-            text-align: center;
+            margin-top: 20px;
             display: none;
+            font-weight: 500;
         }
         
         .success {
             background: #d1fae5;
             color: #065f46;
             border: 1px solid #a7f3d0;
+            display: block;
         }
         
         .error {
             background: #fee2e2;
             color: #991b1b;
             border: 1px solid #fecaca;
+            display: block;
         }
         
-        .user-data {
+        .counter {
+            font-size: 14px;
+            color: #888;
+            margin-top: 10px;
+        }
+        
+        .user-info {
             background: #f8fafc;
-            padding: 20px;
+            padding: 15px;
             border-radius: 10px;
-            margin-top: 20px;
+            margin-bottom: 20px;
+            text-align: left;
             border: 1px solid #e2e8f0;
         }
         
-        .user-data h3 {
+        .user-info h3 {
             margin-bottom: 10px;
             color: #475569;
+            font-size: 16px;
+        }
+        
+        .icon {
+            font-size: 24px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1 id="form-title">Вход в аккаунт</h1>
+        <h1>📨 Уведомление администратору</h1>
         
-        <div id="message" class="message"></div>
-        
-        <form id="login-form">
-            <div class="form-group">
-                <label for="login-email">Email</label>
-                <input type="email" id="login-email" placeholder="Ваш email" required>
-            </div>
-            
-            <div class="form-group">
-                <label for="login-password">Пароль</label>
-                <input type="password" id="login-password" placeholder="Ваш пароль" required>
-            </div>
-            
-            <button type="submit" class="btn">Войти</button>
-            <button type="button" class="btn btn-secondary" onclick="switchToRegister()">Регистрация</button>
-        </form>
-        
-        <form id="register-form" style="display: none;">
-            <div class="form-group">
-                <label for="register-name">Имя</label>
-                <input type="text" id="register-name" placeholder="Ваше имя" required>
-            </div>
-            
-            <div class="form-group">
-                <label for="register-email">Email</label>
-                <input type="email" id="register-email" placeholder="Ваш email" required>
-            </div>
-            
-            <div class="form-group">
-                <label for="register-password">Пароль</label>
-                <input type="password" id="register-password" placeholder="Придумайте пароль" required>
-            </div>
-            
-            <div class="form-group">
-                <label for="register-phone">Телефон</label>
-                <input type="tel" id="register-phone" placeholder="+7 (900) 123-45-67">
-            </div>
-            
-            <button type="submit" class="btn">Зарегистрироваться</button>
-            <button type="button" class="btn btn-secondary" onclick="switchToLogin()">Войти</button>
-        </form>
-        
-        <div id="user-data-display" class="user-data" style="display: none;">
-            <h3>Ваши данные:</h3>
-            <p id="user-data-content"></p>
+        <div class="description">
+            Нажмите кнопку ниже, чтобы отправить уведомление администратору.
+            Вы получите подтверждение в Telegram.
         </div>
+        
+        <div class="user-info" id="user-info">
+            <h3>Ваши данные Telegram:</h3>
+            <div id="telegram-data">Загрузка...</div>
+        </div>
+        
+        <button class="notification-btn" id="notify-btn" onclick="sendNotification()">
+            <span class="icon">🔔</span>
+            Отправить уведомление администратору
+        </button>
+        
+        <div class="counter">
+            Отправлено: <span id="counter">0</span> раз
+        </div>
+        
+        <div class="status" id="status"></div>
     </div>
 
     <script>
-        // Получаем Telegram Web App объект
+        // Telegram Web App объект
         const tg = window.Telegram.WebApp;
         
-        // Инициализируем приложение
+        // Инициализация
         tg.expand();
         tg.ready();
         
         // Элементы DOM
-        const loginForm = document.getElementById('login-form');
-        const registerForm = document.getElementById('register-form');
-        const formTitle = document.getElementById('form-title');
-        const messageDiv = document.getElementById('message');
-        const userDataDisplay = document.getElementById('user-data-display');
-        const userDataContent = document.getElementById('user-data-content');
+        const notifyBtn = document.getElementById('notify-btn');
+        const statusDiv = document.getElementById('status');
+        const counterSpan = document.getElementById('counter');
+        const telegramDataDiv = document.getElementById('telegram-data');
+        const userInfoDiv = document.getElementById('user-info');
         
-        // Данные пользователя
-        let userData = null;
+        // Счетчик нажатий
+        let clickCount = 0;
         
-        // Функция для отображения сообщений
-        function showMessage(text, type = 'success') {
-            messageDiv.textContent = text;
-            messageDiv.className = `message ${type}`;
-            messageDiv.style.display = 'block';
+        // Функция для отображения статуса
+        function showStatus(message, type = 'success') {
+            statusDiv.textContent = message;
+            statusDiv.className = `status ${type}`;
             
             setTimeout(() => {
-                messageDiv.style.display = 'none';
+                statusDiv.style.display = 'none';
+                statusDiv.className = 'status';
             }, 5000);
         }
         
-        // Функция переключения на форму регистрации
-        function switchToRegister() {
-            loginForm.style.display = 'none';
-            registerForm.style.display = 'block';
-            formTitle.textContent = 'Регистрация';
-            userDataDisplay.style.display = 'none';
+        // Функция отправки уведомления
+        function sendNotification() {
+            // Получаем данные Telegram пользователя
+            const tgUser = tg.initDataUnsafe.user || {};
+            
+            // Создаем сообщение с текущим временем
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('ru-RU');
+            const dateString = now.toLocaleDateString('ru-RU');
+            
+            // Формируем данные для отправки
+            const notificationData = {
+                message: `Уведомление от пользователя ${tgUser.first_name || 'Неизвестный'}! ${timeString} ${dateString}`,
+                action: "notification",
+                timestamp: now.toISOString(),
+                user_telegram_id: tgUser.id,
+                click_number: clickCount + 1
+            };
+            
+            // Блокируем кнопку на время отправки
+            notifyBtn.disabled = true;
+            notifyBtn.innerHTML = '<span class="icon">⏳</span> Отправка...';
+            
+            // Отправляем данные в бота
+            tg.sendData(`NOTIFY_ADMIN:${JSON.stringify(notificationData)}`);
+            
+            // Обновляем счетчик
+            clickCount++;
+            counterSpan.textContent = clickCount;
+            
+            // Показываем статус
+            showStatus('✅ Уведомление отправлено! Закройте мини-приложение.', 'success');
+            
+            // Разблокируем кнопку через 2 секунды
+            setTimeout(() => {
+                notifyBtn.disabled = false;
+                notifyBtn.innerHTML = '<span class="icon">🔔</span> Отправить еще одно уведомление';
+            }, 2000);
         }
         
-        // Функция переключения на форму входа
-        function switchToLogin() {
-            registerForm.style.display = 'none';
-            loginForm.style.display = 'block';
-            formTitle.textContent = 'Вход в аккаунт';
-            userDataDisplay.style.display = 'none';
-        }
-        
-        // Обработчик формы входа
-        loginForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
+        // Показываем данные Telegram пользователя при загрузке
+        function displayTelegramData() {
+            const tgUser = tg.initDataUnsafe.user;
             
-            const email = document.getElementById('login-email').value;
-            const password = document.getElementById('login-password').value;
-            
-            // Имитация проверки данных (в реальном приложении здесь был бы запрос на сервер)
-            if (email && password) {
-                userData = {
-                    action: 'login',
-                    email: email,
-                    timestamp: new Date().toISOString(),
-                    telegramId: tg.initDataUnsafe.user?.id,
-                    telegramUsername: tg.initDataUnsafe.user?.username,
-                    firstName: tg.initDataUnsafe.user?.first_name,
-                    lastName: tg.initDataUnsafe.user?.last_name
-                };
+            if (tgUser) {
+                let userInfo = '';
                 
-                // Отправляем данные в Telegram бота
-                sendDataToBot(userData);
+                if (tgUser.first_name) {
+                    userInfo += `<strong>Имя:</strong> ${tgUser.first_name}<br>`;
+                }
+                if (tgUser.last_name) {
+                    userInfo += `<strong>Фамилия:</strong> ${tgUser.last_name}<br>`;
+                }
+                if (tgUser.username) {
+                    userInfo += `<strong>Username:</strong> @${tgUser.username}<br>`;
+                }
+                if (tgUser.id) {
+                    userInfo += `<strong>Telegram ID:</strong> ${tgUser.id}`;
+                }
                 
-                showMessage('✅ Вход выполнен успешно! Данные отправлены в Telegram.');
-                
-                // Показываем данные пользователя
-                displayUserData(userData);
+                telegramDataDiv.innerHTML = userInfo;
             } else {
-                showMessage('❌ Пожалуйста, заполните все поля', 'error');
+                userInfoDiv.style.display = 'none';
             }
+        }
+        
+        // Инициализация при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            displayTelegramData();
+            
+            // Показываем версию Web App (для отладки)
+            console.log('Telegram Web App version:', tg.version);
+            console.log('Telegram user data:', tg.initDataUnsafe.user);
+            
+            // Можно добавить автоматическую отправку при открытии (если нужно)
+            // setTimeout(sendNotification, 1000);
         });
         
-        // Обработчик формы регистрации
-        registerForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const name = document.getElementById('register-name').value;
-            const email = document.getElementById('register-email').value;
-            const password = document.getElementById('register-password').value;
-            const phone = document.getElementById('register-phone').value;
-            
-            // Имитация регистрации
-            if (name && email && password) {
-                userData = {
-                    action: 'register',
-                    name: name,
-                    email: email,
-                    phone: phone,
-                    timestamp: new Date().toISOString(),
-                    telegramId: tg.initDataUnsafe.user?.id,
-                    telegramUsername: tg.initDataUnsafe.user?.username,
-                    firstName: tg.initDataUnsafe.user?.first_name,
-                    lastName: tg.initDataUnsafe.user?.last_name
-                };
-                
-                // Отправляем данные в Telegram бота
-                sendDataToBot(userData);
-                
-                showMessage('✅ Регистрация выполнена успешно! Данные отправлены в Telegram.');
-                
-                // Показываем данные пользователя
-                displayUserData(userData);
-                
-                // Переключаемся на форму входа после регистрации
-                setTimeout(() => {
-                    switchToLogin();
-                }, 3000);
-            } else {
-                showMessage('❌ Пожалуйста, заполните обязательные поля', 'error');
-            }
+        // Обработчик закрытия Web App
+        tg.onEvent('viewportChanged', function() {
+            console.log('Viewport changed');
         });
         
-        // Функция для отправки данных в бота
-        function sendDataToBot(data) {
-            // Преобразуем данные в строку для отправки
-            const dataStr = `WEB_APP_DATA:${JSON.stringify(data, null, 2)}`;
-            
-            // Отправляем данные через Telegram Web App
-            tg.sendData(dataStr);
-            
-            // Альтернативный способ - через закрытие Web App с передачей данных
-            // tg.close();
-        }
-        
-        // Функция для отображения данных пользователя
-        function displayUserData(data) {
-            const formattedData = `
-                Действие: ${data.action}<br>
-                ${data.name ? `Имя: ${data.name}<br>` : ''}
-                Email: ${data.email}<br>
-                ${data.phone ? `Телефон: ${data.phone}<br>` : ''}
-                Время: ${new Date(data.timestamp).toLocaleString('ru-RU')}<br>
-                Telegram ID: ${data.telegramId || 'Не указан'}<br>
-                Username: @${data.telegramUsername || 'Не указан'}
-            `;
-            
-            userDataContent.innerHTML = formattedData;
-            userDataDisplay.style.display = 'block';
-            
-            // Скрываем формы
-            loginForm.style.display = 'none';
-            registerForm.style.display = 'none';
-            formTitle.textContent = 'Данные отправлены!';
-        }
-        
-        // Инициализация - проверяем, если данные уже есть в initData
-        if (tg.initDataUnsafe.user) {
-            const telegramUser = tg.initDataUnsafe.user;
-            console.log('Telegram user data:', telegramUser);
-            
-            // Можно автоматически заполнить email из данных Telegram
-            // document.getElementById('login-email').value = 
-            //     telegramUser.username ? `${telegramUser.username}@telegram.com` : '';
-        }
+        // Пример: автоматическая отправка при определенных условиях
+        // if (tg.initDataUnsafe.start_param === 'auto_notify') {
+        //     setTimeout(sendNotification, 1000);
+        // }
     </script>
 </body>
 </html>
