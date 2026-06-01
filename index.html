@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, maximum-scale=2.0">
-  <title>Тест · Матрицы и графики (ручное указание)</title>
+  <title>Зачет · Тригонометрия</title>
   <style>
     * {
       margin: 0;
@@ -11,7 +11,7 @@
       box-sizing: border-box;
     }
     body {
-      background: linear-gradient(145deg, #1e3c3a 0%, #0f2a28 100%);
+      background: linear-gradient(145deg, #2c1e4a 0%, #1a1230 100%);
       font-family: 'Segoe UI', Roboto, 'Helvetica Neue', system-ui, sans-serif;
       min-height: 100vh;
       display: flex;
@@ -22,27 +22,27 @@
     }
     .container {
       width: 100%;
-      max-width: 950px;
-      background: #f0f7f6;
+      max-width: 900px;
+      background: #f5f0ff;
       border-radius: 2.5rem;
-      box-shadow: 0 30px 50px rgba(0,0,0,0.5), inset 0 1px 0 rgba(200,240,235,0.6);
+      box-shadow: 0 30px 50px rgba(0,0,0,0.5), inset 0 1px 0 rgba(220,200,255,0.6);
       padding: 2rem 2rem 1.8rem;
       transition: all 0.2s;
-      border: 1px solid rgba(60, 150, 130, 0.5);
+      border: 1px solid rgba(150, 120, 220, 0.5);
     }
     h1 {
       text-align: center;
-      color: #0a3a34;
+      color: #2e1a4e;
       font-weight: 600;
       font-size: 2.2rem;
       letter-spacing: 2px;
       margin-bottom: 1.5rem;
-      text-shadow: 2px 2px 0 rgba(100, 200, 180, 0.3);
-      border-bottom: 3px dashed #2e8b7a;
+      text-shadow: 2px 2px 0 rgba(180, 150, 220, 0.4);
+      border-bottom: 3px dashed #7b5ea7;
       padding-bottom: 0.5rem;
     }
     .student-area {
-      background: #d4ece7;
+      background: #e4d9f5;
       border-radius: 2rem;
       padding: 1.5rem;
       margin-bottom: 1.5rem;
@@ -54,13 +54,13 @@
     }
     .student-area label {
       font-weight: 700;
-      color: #0a3a34;
+      color: #2e1a4e;
       font-size: 1.1rem;
     }
     #fullNameInput {
       flex: 1 1 250px;
       padding: 0.9rem 1.2rem;
-      border: 2px solid #5fa89b;
+      border: 2px solid #9b7ec4;
       border-radius: 3rem;
       font-size: 1rem;
       background: #ffffff;
@@ -69,11 +69,11 @@
       font-weight: 500;
     }
     #fullNameInput:focus {
-      border-color: #2e6b60;
-      box-shadow: 0 0 0 4px rgba(46, 107, 96, 0.25);
+      border-color: #5a3e85;
+      box-shadow: 0 0 0 4px rgba(90, 62, 133, 0.25);
     }
     .btn {
-      background: #3d8b7a;
+      background: #6d4f9e;
       border: none;
       color: #ffffff;
       font-weight: 700;
@@ -82,9 +82,9 @@
       font-size: 1rem;
       cursor: pointer;
       transition: all 0.2s;
-      background: linear-gradient(180deg, #58b8a6 0%, #2e6b60 100%);
-      box-shadow: 0 6px 0 #1e4a40, 0 8px 16px rgba(0,0,0,0.3);
-      border: 1px solid #8fd6c8;
+      background: linear-gradient(180deg, #8b6bc0 0%, #5a3e85 100%);
+      box-shadow: 0 6px 0 #3d295c, 0 8px 16px rgba(0,0,0,0.3);
+      border: 1px solid #b199d4;
       letter-spacing: 0.8px;
       display: inline-flex;
       align-items: center;
@@ -92,18 +92,18 @@
     }
     .btn:hover:not(:disabled) {
       transform: translateY(-2px);
-      box-shadow: 0 8px 0 #1e4a40, 0 12px 20px rgba(0,0,0,0.35);
-      background: linear-gradient(180deg, #6ecfbc 0%, #2e6b60 100%);
+      box-shadow: 0 8px 0 #3d295c, 0 12px 20px rgba(0,0,0,0.35);
+      background: linear-gradient(180deg, #9f7ed4 0%, #5a3e85 100%);
     }
     .btn:active:not(:disabled) {
       transform: translateY(3px);
-      box-shadow: 0 3px 0 #1e4a40, 0 5px 10px rgba(0,0,0,0.3);
+      box-shadow: 0 3px 0 #3d295c, 0 5px 10px rgba(0,0,0,0.3);
     }
     .btn:disabled {
       opacity: 0.6;
       filter: grayscale(0.3);
       transform: translateY(2px);
-      box-shadow: 0 3px 0 #1e4a40, 0 5px 10px rgba(0,0,0,0.2);
+      box-shadow: 0 3px 0 #3d295c, 0 5px 10px rgba(0,0,0,0.2);
       cursor: not-allowed;
     }
     .btn-start {
@@ -121,11 +121,11 @@
       font-size: 1.2rem;
     }
     .test-panel {
-      background: #e6f3f0;
+      background: #f2ecfa;
       border-radius: 1.8rem;
       padding: 1.5rem;
       margin: 1.2rem 0;
-      border: 1px solid #b0d9d0;
+      border: 1px solid #c9b3e6;
     }
     .question-block {
       background: white;
@@ -133,32 +133,32 @@
       padding: 1.2rem;
       margin-bottom: 1.5rem;
       box-shadow: 0 6px 12px rgba(0,0,0,0.06);
-      border-left: 6px solid #2e8b7a;
+      border-left: 6px solid #6d4f9e;
     }
     .question-text {
       font-weight: 700;
-      color: #0a3a34;
+      color: #2e1a4e;
       margin-bottom: 0.8rem;
       font-size: 1.1rem;
     }
     .options {
       display: flex;
       flex-direction: column;
-      gap: 0.8rem;
+      gap: 0.6rem;
     }
     .option-item {
       display: flex;
       align-items: center;
-      gap: 1rem;
-      background: #f0f7f6;
-      padding: 0.6rem 1rem;
-      border-radius: 1.5rem;
+      gap: 0.7rem;
+      background: #f5f0ff;
+      padding: 0.5rem 1rem;
+      border-radius: 2rem;
       transition: 0.1s;
       cursor: pointer;
-      border: 1px solid #c0ddd6;
+      border: 1px solid #d9c9f0;
     }
     .option-item input[type="radio"] {
-      accent-color: #2e6b60;
+      accent-color: #5a3e85;
       width: 1.2rem;
       height: 1.2rem;
       margin-right: 0.3rem;
@@ -168,51 +168,52 @@
       cursor: pointer;
       font-weight: 500;
       width: 100%;
-      color: #0a3a34;
+      color: #2e1a4e;
     }
-    .matrix-table {
-      border-collapse: collapse;
-      margin: 0.3rem 0;
-    }
-    .matrix-table td {
-      border: 1px solid #2e8b7a;
-      padding: 0.3rem 0.8rem;
-      text-align: center;
-      font-weight: 500;
-      background: #fff;
-    }
-    .graph-container {
-      margin-top: 0.8rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    canvas {
-      border: 2px solid #2e8b7a;
+    .circle-canvas {
+      border: 2px solid #6d4f9e;
       border-radius: 12px;
       background: #fff;
-      cursor: crosshair;
-      width: 100%;
-      max-width: 480px;
-      height: auto;
+      cursor: pointer;
+      display: block;
+      margin: 0.5rem auto;
     }
-    .graph-coords {
-      font-size: 0.9rem;
-      color: #1e4a40;
-      margin-top: 0.3rem;
-      text-align: center;
+    .select-match {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: center;
+      margin: 0.3rem 0;
+    }
+    .select-match select {
+      padding: 0.4rem 1rem;
+      border-radius: 2rem;
+      border: 1px solid #9b7ec4;
+      background: white;
+      font-weight: 500;
+    }
+    .checkbox-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .checkbox-group label {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      cursor: pointer;
     }
     .results-area {
-      background: #1a2e2b;
+      background: #2a1f3d;
       border-radius: 2rem;
       padding: 1.5rem;
-      color: #d4ece7;
+      color: #e4d9f5;
       margin-top: 1rem;
       max-height: 400px;
       overflow-y: auto;
     }
     .result-entry {
-      background: #2d4540;
+      background: #3e2f55;
       border-radius: 1rem;
       padding: 0.8rem 1.2rem;
       margin-bottom: 0.6rem;
@@ -225,7 +226,7 @@
       display: none !important;
     }
     hr {
-      border: 1px solid #8fd6c8;
+      border: 1px solid #b199d4;
       margin: 1rem 0;
     }
     .modal-overlay {
@@ -239,18 +240,18 @@
       z-index: 1000;
     }
     .modal-content {
-      background: #f0f7f6;
+      background: #f5f0ff;
       border-radius: 2rem;
-      max-width: 800px;
+      max-width: 750px;
       width: 90%;
       max-height: 85vh;
       overflow-y: auto;
       padding: 1.8rem;
       box-shadow: 0 30px 50px black;
-      border: 2px solid #3d8b7a;
+      border: 2px solid #7b5ea7;
     }
     .modal-content h2 {
-      color: #0a3a34;
+      color: #2e1a4e;
       margin-bottom: 1rem;
     }
     .review-block {
@@ -271,7 +272,7 @@
       margin: 0.2rem 0;
     }
     .close-modal-btn {
-      background: #2e6b60;
+      background: #5a3e85;
       border: none;
       color: white;
       padding: 0.7rem 2rem;
@@ -284,7 +285,7 @@
 </head>
 <body>
 <div class="container">
-  <h1>📐 Матрицы и графики</h1>
+  <h1>📐 Зачет по Тригонометрии)</h1>
 
   <div class="student-area" id="studentPanel">
     <label for="fullNameInput">👤 ФИО:</label>
@@ -303,181 +304,59 @@
 
 <script>
   (function() {
-    // ---------- БАНК ВОПРОСОВ (4 варианта) ----------
-    const QUESTION_BANK = {
-      v1: [
-        { type: 'matrix', text: "Умножьте матрицу A на 3:", matrixA: [[2,1],[4,0]], options: [
-          { matrix: [[6,3],[12,0]], correct: true },
-          { matrix: [[5,4],[7,3]], correct: false },
-          { matrix: [[6,1],[12,0]], correct: false },
-          { matrix: [[2,1],[4,0]], correct: false }
-        ]},
-        { type: 'graph', text: "Найдите точку пересечения прямых y = 2x - 1 и y = -x + 2. Укажите её на плоскости.",
-          xMin: -1, xMax: 3, yMin: -2, yMax: 4, correctX: 1, correctY: 1, tol: 0.3 },
-        { type: 'matrix', text: "Транспонируйте матрицу B:", matrixA: [[1,2,3],[4,5,6]], options: [
-          { matrix: [[1,4],[2,5],[3,6]], correct: true },
-          { matrix: [[1,2],[3,4],[5,6]], correct: false },
-          { matrix: [[1,2,3],[4,5,6]], correct: false },
-          { matrix: [[6,5,4],[3,2,1]], correct: false }
-        ]},
-        { type: 'graph', text: "Найдите вершину параболы y = x² - 4x + 3. Отметьте её.",
-          xMin: -1, xMax: 5, yMin: -3, yMax: 4, correctX: 2, correctY: -1, tol: 0.3 },
-        { type: 'matrix', text: "Найдите произведение матриц A·B:", matrixA: [[1,0],[0,1]], matrixB: [[5,6],[7,8]], options: [
-          { matrix: [[5,6],[7,8]], correct: true },
-          { matrix: [[1,0],[0,1]], correct: false },
-          { matrix: [[6,6],[7,9]], correct: false },
-          { matrix: [[5,7],[6,8]], correct: false }
-        ]},
-        { type: 'graph', text: "Решите уравнение sin(x) = 0.5 на отрезке [0, π]. Укажите точку (наименьший x).",
-          xMin: 0, xMax: Math.PI, yMin: -0.5, yMax: 1.2, correctX: Math.PI/6, correctY: 0.5, tol: 0.3 },
-        { type: 'matrix', text: "Транспонируйте матрицу C:", matrixA: [[2,0],[1,4],[3,5]], options: [
-          { matrix: [[2,1,3],[0,4,5]], correct: true },
-          { matrix: [[0,2],[4,1],[5,3]], correct: false },
-          { matrix: [[2,0],[1,4],[3,5]], correct: false },
-          { matrix: [[2,1],[0,4],[3,5]], correct: false }
-        ]},
-        { type: 'graph', text: "Прямая y = 3x + 1. Найдите точку с x = 2.",
-          xMin: 0, xMax: 4, yMin: -1, yMax: 8, correctX: 2, correctY: 7, tol: 0.3 },
-        { type: 'matrix', text: "Умножьте матрицу D на -2:", matrixA: [[-1,2],[0,3]], options: [
-          { matrix: [[2,-4],[0,-6]], correct: true },
-          { matrix: [[2,4],[0,6]], correct: false },
-          { matrix: [[-2,4],[0,-6]], correct: false },
-          { matrix: [[2,-4],[0,6]], correct: false }
-        ]},
-        { type: 'graph', text: "Найдите точку пересечения параболы y = x² и прямой y = 2x + 3 (x > 0).",
-          xMin: -1, xMax: 5, yMin: -2, yMax: 16, correctX: 3, correctY: 9, tol: 0.5 }
-      ],
-      v2: [
-        { type: 'graph', text: "Точка пересечения прямых y = -0.5x + 2 и y = x - 1.",
-          xMin: -1, xMax: 4, yMin: -2, yMax: 3, correctX: 2, correctY: 1, tol: 0.3 },
-        { type: 'matrix', text: "Умножьте матрицу A на 4:", matrixA: [[3,0],[1,2]], options: [
-          { matrix: [[12,0],[4,8]], correct: true },
-          { matrix: [[7,4],[5,6]], correct: false },
-          { matrix: [[12,0],[1,8]], correct: false },
-          { matrix: [[3,0],[4,8]], correct: false }
-        ]},
-        { type: 'graph', text: "Вершина параболы y = -x² + 2x + 3.",
-          xMin: -1, xMax: 4, yMin: -2, yMax: 5, correctX: 1, correctY: 4, tol: 0.3 },
-        { type: 'matrix', text: "Транспонируйте матрицу E:", matrixA: [[5,1],[2,4],[0,3]], options: [
-          { matrix: [[5,2,0],[1,4,3]], correct: true },
-          { matrix: [[5,1],[2,4],[0,3]], correct: false },
-          { matrix: [[5,2,0],[1,4,3]], correct: true },
-          { matrix: [[1,5],[4,2],[3,0]], correct: false }
-        ]},
-        { type: 'graph', text: "Точка на графике y = cos(x) при x = π/3.",
-          xMin: 0, xMax: Math.PI/2+0.5, yMin: -0.5, yMax: 1.2, correctX: Math.PI/3, correctY: 0.5, tol: 0.3 },
-        { type: 'matrix', text: "A·B, где A=[[2,1],[0,1]], B=[[3,4],[5,6]]", matrixA: [[2,1],[0,1]], matrixB: [[3,4],[5,6]], options: [
-          { matrix: [[11,14],[5,6]], correct: true },
-          { matrix: [[6,4],[0,6]], correct: false },
-          { matrix: [[2,1],[3,4]], correct: false },
-          { matrix: [[11,5],[14,6]], correct: false }
-        ]},
-        { type: 'graph', text: "Пересечение y = 1/x и y = 2 (x>0).",
-          xMin: 0.1, xMax: 2, yMin: 0, yMax: 3, correctX: 0.5, correctY: 2, tol: 0.2 },
-        { type: 'matrix', text: "Умножьте матрицу F на -1:", matrixA: [[4,-2],[0,5]], options: [
-          { matrix: [[-4,2],[0,-5]], correct: true },
-          { matrix: [[-4,-2],[0,5]], correct: false },
-          { matrix: [[4,2],[0,-5]], correct: false },
-          { matrix: [[-4,2],[0,5]], correct: false }
-        ]},
-        { type: 'graph', text: "Точка на прямой y = -2x + 4 при x = 1.5.",
-          xMin: 0, xMax: 3, yMin: -1, yMax: 5, correctX: 1.5, correctY: 1, tol: 0.3 },
-        { type: 'matrix', text: "Транспонируйте матрицу G:", matrixA: [[7,8,9]], options: [
-          { matrix: [[7],[8],[9]], correct: true },
-          { matrix: [[7,8,9]], correct: false },
-          { matrix: [[9],[8],[7]], correct: false },
-          { matrix: [[7,8],[9,0]], correct: false }
-        ]}
-      ],
-      v3: [
-        { type: 'matrix', text: "Умножьте матрицу H на 2:", matrixA: [[1,3],[5,7]], options: [
-          { matrix: [[2,6],[10,14]], correct: true },
-          { matrix: [[2,3],[5,14]], correct: false },
-          { matrix: [[1,6],[10,7]], correct: false },
-          { matrix: [[2,6],[5,7]], correct: false }
-        ]},
-        { type: 'graph', text: "Пересечение y = x + 2 и y = -2x + 5.",
-          xMin: -1, xMax: 3, yMin: -1, yMax: 5, correctX: 1, correctY: 3, tol: 0.3 },
-        { type: 'matrix', text: "Транспонируйте матрицу J:", matrixA: [[1,0],[2,1],[3,4]], options: [
-          { matrix: [[1,2,3],[0,1,4]], correct: true },
-          { matrix: [[1,0,2],[1,3,4]], correct: false },
-          { matrix: [[1,0],[2,1],[3,4]], correct: false },
-          { matrix: [[0,1],[1,2],[4,3]], correct: false }
-        ]},
-        { type: 'graph', text: "Вершина параболы y = 2x² - 8x + 5.",
-          xMin: 0, xMax: 4, yMin: -5, yMax: 6, correctX: 2, correctY: -3, tol: 0.3 },
-        { type: 'matrix', text: "A·B: A=[[1,2],[3,4]], B=[[0,1],[1,0]]", matrixA: [[1,2],[3,4]], matrixB: [[0,1],[1,0]], options: [
-          { matrix: [[2,1],[4,3]], correct: true },
-          { matrix: [[1,2],[3,4]], correct: false },
-          { matrix: [[0,2],[3,0]], correct: false },
-          { matrix: [[2,4],[1,3]], correct: false }
-        ]},
-        { type: 'graph', text: "Точка пересечения y = eˣ и y = 2 (x>0).",
-          xMin: 0, xMax: 1.5, yMin: 0, yMax: 3, correctX: Math.log(2), correctY: 2, tol: 0.2 },
-        { type: 'matrix', text: "Умножьте матрицу K на -3:", matrixA: [[0,1],[-2,4]], options: [
-          { matrix: [[0,-3],[6,-12]], correct: true },
-          { matrix: [[0,3],[-6,12]], correct: false },
-          { matrix: [[0,-3],[-6,12]], correct: false },
-          { matrix: [[0,-3],[6,12]], correct: false }
-        ]},
-        { type: 'graph', text: "Точка на графике y = √x при x = 9.",
-          xMin: 0, xMax: 10, yMin: -1, yMax: 4, correctX: 9, correctY: 3, tol: 0.3 },
-        { type: 'matrix', text: "Транспонируйте матрицу L:", matrixA: [[4],[2],[7]], options: [
-          { matrix: [[4,2,7]], correct: true },
-          { matrix: [[4],[2],[7]], correct: false },
-          { matrix: [[7,2,4]], correct: false },
-          { matrix: [[4,2],[7,0]], correct: false }
-        ]},
-        { type: 'graph', text: "Пересечение y = x³ и y = 8.",
-          xMin: -1, xMax: 3, yMin: -2, yMax: 10, correctX: 2, correctY: 8, tol: 0.3 }
-      ],
-      v4: [
-        { type: 'graph', text: "Пересечение y = 0.5x + 1 и y = 2x - 2.",
-          xMin: -1, xMax: 4, yMin: -2, yMax: 4, correctX: 2, correctY: 2, tol: 0.3 },
-        { type: 'matrix', text: "Умножьте матрицу M на 5:", matrixA: [[1,0],[0,1]], options: [
-          { matrix: [[5,0],[0,5]], correct: true },
-          { matrix: [[1,5],[5,1]], correct: false },
-          { matrix: [[5,5],[5,5]], correct: false },
-          { matrix: [[1,0],[0,1]], correct: false }
-        ]},
-        { type: 'graph', text: "Вершина параболы y = -x² + 4x - 1.",
-          xMin: -1, xMax: 5, yMin: -2, yMax: 4, correctX: 2, correctY: 3, tol: 0.3 },
-        { type: 'matrix', text: "Транспонируйте матрицу N:", matrixA: [[9,8,7],[6,5,4]], options: [
-          { matrix: [[9,6],[8,5],[7,4]], correct: true },
-          { matrix: [[9,8],[7,6],[5,4]], correct: false },
-          { matrix: [[9,8,7],[6,5,4]], correct: false },
-          { matrix: [[7,4],[8,5],[9,6]], correct: false }
-        ]},
-        { type: 'graph', text: "Точка на графике y = ln(x) при x = e.",
-          xMin: 1, xMax: 4, yMin: -1, yMax: 2, correctX: Math.E, correctY: 1, tol: 0.3 },
-        { type: 'matrix', text: "Произведение A·B: A=[[2,0],[1,3]], B=[[1,4],[2,5]]", matrixA: [[2,0],[1,3]], matrixB: [[1,4],[2,5]], options: [
-          { matrix: [[2,8],[7,19]], correct: true },
-          { matrix: [[2,0],[2,5]], correct: false },
-          { matrix: [[2,8],[1,15]], correct: false },
-          { matrix: [[2,8],[7,15]], correct: false }
-        ]},
-        { type: 'graph', text: "Пересечение y = |x| и y = 2.",
-          xMin: -3, xMax: 3, yMin: -1, yMax: 3, correctX: 2, correctY: 2, tol: 0.3 },
-        { type: 'matrix', text: "Умножьте матрицу P на 0.5:", matrixA: [[4,6],[8,2]], options: [
-          { matrix: [[2,3],[4,1]], correct: true },
-          { matrix: [[2,6],[4,2]], correct: false },
-          { matrix: [[4,3],[8,1]], correct: false },
-          { matrix: [[2,3],[8,1]], correct: false }
-        ]},
-        { type: 'graph', text: "Точка на прямой y = 4 - x при x = 3.",
-          xMin: 0, xMax: 5, yMin: -2, yMax: 5, correctX: 3, correctY: 1, tol: 0.3 },
-        { type: 'matrix', text: "Транспонируйте матрицу Q:", matrixA: [[1,2],[3,4],[5,6]], options: [
-          { matrix: [[1,3,5],[2,4,6]], correct: true },
-          { matrix: [[1,2],[3,4],[5,6]], correct: false },
-          { matrix: [[6,5],[4,3],[2,1]], correct: false },
-          { matrix: [[1,3],[2,4],[5,6]], correct: false }
-        ]}
-      ]
-    };
+    // ---------- ЕДИНСТВЕННЫЙ ВАРИАНТ ----------
+    const questions = [
+      // А1
+      { type: 'choice', text: "А1. Градусная мера угла 7π/6 рад равна…", options: ["150°", "330°", "210°", "420°"], correct: 2 },
+      // А2 – окружность с выбором точки
+      { type: 'circle', text: "А2. Точка тригонометрической окружности с абсциссой -1 соответствует числу…", correctPoint: 'B', points: {
+        A: { angle: Math.PI/2, label: 'π/2' },
+        B: { angle: Math.PI, label: 'π' },
+        C: { angle: 3*Math.PI/2, label: '3π/2' },
+        D: { angle: 0, label: '0 (2π)' }
+      }},
+      // А3 – окружность с точками N,M,P,C
+      { type: 'circlePoints', text: "А3. Какая из точек, расположенных на тригонометрической окружности, может соответствовать числу 7π/6?", correctPoint: 'N', points: {
+        N: { angle: 7*Math.PI/6, label: 'N' },
+        M: { angle: 5*Math.PI/4, label: 'M' },
+        P: { angle: 4*Math.PI/3, label: 'P' },
+        C: { angle: 5*Math.PI/6, label: 'C' }
+      }},
+      // А4
+      { type: 'choice', text: "А4. Углом какой четверти является угол, равный 560°?", options: ["I", "II", "III", "IV"], correct: 2 },
+      // А5 – множественный выбор (чекбоксы)
+      { type: 'checkbox', text: "А5. Число -2 может быть значением:", options: ["синуса некоторого угла", "косинуса некоторого угла", "тангенса некоторого угла", "котангенса некоторого угла"], correct: [2,3] },
+      // А6 – соответствие (select)
+      { type: 'match', text: "А6. Установите соответствие: sinα > 0, cosα > 0. Выберите четверть:", pairs: [{ label: "sinα>0, cosα>0", correct: "I" }], options: ["I", "II", "III", "IV"] },
+      // А7
+      { type: 'choice', text: "А7. Положительным числом является:", options: ["sin 193°", "cos 293°", "tg 293°", "ctg 293°"], correct: 1 },
+      // А8 – множественное соответствие
+      { type: 'matchMulti', text: "А8. Установите соответствие между выражениями и их значениями:", pairs: [
+        { expr: "а) sin 90°", correct: "1" },
+        { expr: "б) cos 90°", correct: "0" },
+        { expr: "в) tg 135°", correct: "-1" },
+        { expr: "г) tg 45°", correct: "1" }
+      ], values: ["1", "0", "-1", "0.5"] },
+      // А9
+      { type: 'choice', text: "А9. Значение выражения 2sin30° + 2cos60° + tg60° - ctg30° равно:", options: ["1", "3", "0", "2"], correct: 3 },
+      // А10
+      { type: 'choice', text: "А10. Вычислите cos(π/3).", options: ["1/2", "√2/2", "√3/2", "1"], correct: 0 },
+      // В1
+      { type: 'numeric', text: "В1. Найдите cosα, если sinα = 0.7 и 0 < α < π/2.", correct: 0.714, tolerance: 0.01 },
+      // В2
+      { type: 'numeric', text: "В2. Найдите значение выражения: 21·tg(π/4)·sin(π/2).", correct: 21, tolerance: 0.01 },
+      // В3
+      { type: 'numeric', text: "В3. Найдите значение выражения: 14·sin(-675°).", correct: 14, tolerance: 0.01 },
+      // В4
+      { type: 'numeric', text: "В4. Найдите значение выражения: 8·cos(π/3)·sin(π/6).", correct: -4, tolerance: 0.01 },
+      // В5
+      { type: 'numeric', text: "В5. Найдите значение выражения: (sin²45° + cos²45°)·18.", correct: 18, tolerance: 0.01 },
+      // В6
+      { type: 'numeric', text: "В6. Найдите значение выражения: 14·(sin²30° + cos²30°).", correct: 14, tolerance: 0.01 }
+    ];
 
     let currentStudentName = "";
-    let currentQuestions = [];
-    let studentAnswers = [];
+    let studentAnswers = new Array(questions.length).fill(null);
     let testActive = false;
     let allResults = [];
 
@@ -498,165 +377,177 @@
       return arr;
     }
 
-    function prepareRandomVariant() {
-      const keys = ['v1','v2','v3','v4'];
-      const randomKey = keys[Math.floor(Math.random() * keys.length)];
-      const variant = QUESTION_BANK[randomKey];
-      return shuffleArray(variant.map(q => {
-        if (q.type === 'matrix') {
-          const opts = q.options.map(opt => ({...opt}));
-          const shuffled = shuffleArray([...opts]);
-          const newCorrect = shuffled.findIndex(opt => opt.correct);
-          return { ...q, options: shuffled, correctIndex: newCorrect };
-        } else {
-          return { ...q };
-        }
-      }));
-    }
-
-    function renderMatrixTable(matrix) {
-      const table = document.createElement('table');
-      table.className = 'matrix-table';
-      matrix.forEach(row => {
-        const tr = document.createElement('tr');
-        row.forEach(val => {
-          const td = document.createElement('td');
-          td.textContent = val;
-          tr.appendChild(td);
-        });
-        table.appendChild(tr);
-      });
-      return table;
-    }
-
-    function renderGraphQuestion(container, question, qIndex) {
+    function drawCircleCanvas(container, question, qIndex, pointLabels) {
       const canvas = document.createElement('canvas');
-      canvas.width = 480;
-      canvas.height = 280;
-      canvas.style.maxWidth = '100%';
+      canvas.width = 250;
+      canvas.height = 250;
+      canvas.className = 'circle-canvas';
       const ctx = canvas.getContext('2d');
+      const cx = 125, cy = 125, r = 90;
+      let selectedPoint = studentAnswers[qIndex];
 
-      const xMin = question.xMin, xMax = question.xMax, yMin = question.yMin, yMax = question.yMax;
-      const padLeft = 55, padRight = 25, padTop = 25, padBottom = 35;
-      const plotWidth = canvas.width - padLeft - padRight;
-      const plotHeight = canvas.height - padTop - padBottom;
-
-      function toCanvasX(x) { return padLeft + (x - xMin) / (xMax - xMin) * plotWidth; }
-      function toCanvasY(y) { return padTop + (yMax - y) / (yMax - yMin) * plotHeight; }
-
-      function drawGraph() {
+      function draw() {
         ctx.clearRect(0,0,canvas.width,canvas.height);
-        // Сетка
-        ctx.strokeStyle = '#ddd'; ctx.lineWidth=0.5;
-        let yStep = (yMax - yMin) > 5 ? 1 : 0.5;
-        for (let y = Math.ceil(yMin/yStep)*yStep; y <= yMax; y+=yStep) {
-          ctx.beginPath(); ctx.moveTo(padLeft, toCanvasY(y)); ctx.lineTo(canvas.width-padRight, toCanvasY(y)); ctx.stroke();
-        }
-        let xStep = (xMax - xMin) > 5 ? 1 : 0.5;
-        for (let x = Math.ceil(xMin/xStep)*xStep; x <= xMax; x+=xStep) {
-          ctx.beginPath(); ctx.moveTo(toCanvasX(x), padTop); ctx.lineTo(toCanvasX(x), canvas.height-padBottom); ctx.stroke();
-        }
-        // Оси
-        ctx.strokeStyle = '#333'; ctx.lineWidth=1.5;
-        ctx.beginPath(); ctx.moveTo(padLeft, toCanvasY(0)); ctx.lineTo(canvas.width-padRight, toCanvasY(0)); ctx.stroke();
-        ctx.beginPath(); ctx.moveTo(toCanvasX(0), padTop); ctx.lineTo(toCanvasX(0), canvas.height-padBottom); ctx.stroke();
-        // Подписи
-        ctx.fillStyle = '#333'; ctx.font = '12px sans-serif';
-        ctx.fillText('0', toCanvasX(0)-15, toCanvasY(0)-5);
-        for (let x = Math.ceil(xMin); x <= xMax; x+=1) {
-          if (x === 0) continue;
-          ctx.fillText(x, toCanvasX(x)-5, toCanvasY(0)-5);
-        }
-        for (let y = Math.ceil(yMin); y <= yMax; y+=1) {
-          if (y === 0) continue;
-          ctx.fillText(y, toCanvasX(0)-25, toCanvasY(y)+4);
-        }
-
-        if (studentAnswers[qIndex]) {
-          const pt = studentAnswers[qIndex];
-          ctx.fillStyle = '#c9302c';
+        // окружность
+        ctx.beginPath();
+        ctx.arc(cx, cy, r, 0, 2*Math.PI);
+        ctx.strokeStyle = '#6d4f9e';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        // оси
+        ctx.beginPath();
+        ctx.moveTo(cx-r-10, cy); ctx.lineTo(cx+r+10, cy);
+        ctx.moveTo(cx, cy-r-10); ctx.lineTo(cx, cy+r+10);
+        ctx.strokeStyle = '#999';
+        ctx.stroke();
+        // точки
+        for (let key in pointLabels) {
+          let angle = pointLabels[key].angle;
+          let px = cx + r * Math.cos(angle);
+          let py = cy - r * Math.sin(angle);
           ctx.beginPath();
-          ctx.arc(toCanvasX(pt.x), toCanvasY(pt.y), 6, 0, 2*Math.PI);
+          ctx.arc(px, py, 5, 0, 2*Math.PI);
+          ctx.fillStyle = (selectedPoint === key) ? '#c9302c' : '#5a3e85';
           ctx.fill();
-          ctx.fillStyle = '#000'; ctx.font='bold 11px sans-serif';
-          ctx.fillText(`(${pt.x.toFixed(2)}, ${pt.y.toFixed(2)})`, toCanvasX(pt.x)+8, toCanvasY(pt.y)-8);
+          ctx.fillStyle = '#000';
+          ctx.font = 'bold 12px sans-serif';
+          ctx.fillText(pointLabels[key].label, px+7, py-7);
         }
       }
 
-      drawGraph();
+      draw();
       canvas.addEventListener('click', (e) => {
         const rect = canvas.getBoundingClientRect();
         const scaleX = canvas.width / rect.width;
         const scaleY = canvas.height / rect.height;
         const mx = (e.clientX - rect.left) * scaleX;
         const my = (e.clientY - rect.top) * scaleY;
-        const x = xMin + (mx - padLeft) / plotWidth * (xMax - xMin);
-        const y = yMax - (my - padTop) / plotHeight * (yMax - yMin);
-        if (x < xMin || x > xMax || y < yMin || y > yMax) return;
-        studentAnswers[qIndex] = {x, y};
-        drawGraph();
-        coordDiv.textContent = `Выбрано: x≈${x.toFixed(3)}, y≈${y.toFixed(3)}`;
+        let minDist = 20; // радиус захвата
+        let found = null;
+        for (let key in pointLabels) {
+          let angle = pointLabels[key].angle;
+          let px = cx + r * Math.cos(angle);
+          let py = cy - r * Math.sin(angle);
+          let dist = Math.hypot(mx - px, my - py);
+          if (dist < minDist) {
+            found = key;
+            minDist = dist;
+          }
+        }
+        if (found) {
+          studentAnswers[qIndex] = found;
+          selectedPoint = found;
+          draw();
+          coordDiv.textContent = `Выбрана точка: ${found}`;
+        }
       });
 
       container.appendChild(canvas);
       const coordDiv = document.createElement('div');
-      coordDiv.className = 'graph-coords';
-      coordDiv.textContent = 'Вычислите координаты и кликните в нужное место';
+      coordDiv.style.textAlign = 'center';
+      coordDiv.textContent = selectedPoint ? `Выбрана точка: ${selectedPoint}` : 'Кликните по точке на окружности';
       container.appendChild(coordDiv);
-      if (studentAnswers[qIndex]) {
-        coordDiv.textContent = `Выбрано: x≈${studentAnswers[qIndex].x.toFixed(3)}, y≈${studentAnswers[qIndex].y.toFixed(3)}`;
-      }
     }
 
     function renderTest() {
       if (!questionsContainer) return;
       questionsContainer.innerHTML = '';
-      studentAnswers = new Array(currentQuestions.length).fill(null);
+      studentAnswers = new Array(questions.length).fill(null);
 
-      currentQuestions.forEach((q, qIdx) => {
+      questions.forEach((q, qIdx) => {
         const block = document.createElement('div');
         block.className = 'question-block';
-        block.innerHTML = `<div class="question-text">${qIdx+1}. ${q.text}</div>`;
+        block.innerHTML = `<div class="question-text">${q.text}</div>`;
 
-        if (q.type === 'matrix') {
-          if (q.matrixA) {
-            const matDiv = document.createElement('div');
-            matDiv.style.marginBottom = '0.5rem';
-            matDiv.appendChild(renderMatrixTable(q.matrixA));
-            if (q.matrixB) {
-              matDiv.appendChild(document.createTextNode(' × '));
-              matDiv.appendChild(renderMatrixTable(q.matrixB));
-            }
-            block.appendChild(matDiv);
-          }
+        if (q.type === 'choice') {
           const optsDiv = document.createElement('div');
           optsDiv.className = 'options';
           q.options.forEach((opt, optIdx) => {
             const item = document.createElement('div');
             item.className = 'option-item';
-            const radio = document.createElement('input');
-            radio.type = 'radio';
-            radio.name = `q${qIdx}`;
-            radio.value = optIdx;
-            const label = document.createElement('label');
-            label.appendChild(renderMatrixTable(opt.matrix));
-            item.appendChild(radio);
-            item.appendChild(label);
-            radio.addEventListener('change', () => { if (testActive) studentAnswers[qIdx] = parseInt(radio.value); });
+            item.innerHTML = `<input type="radio" name="q${qIdx}" value="${optIdx}"><label>${opt}</label>`;
+            item.querySelector('input').addEventListener('change', function() {
+              if (testActive) studentAnswers[qIdx] = parseInt(this.value);
+            });
             optsDiv.appendChild(item);
           });
           block.appendChild(optsDiv);
-        } else if (q.type === 'graph') {
-          const graphContainer = document.createElement('div');
-          graphContainer.className = 'graph-container';
-          block.appendChild(graphContainer);
-          renderGraphQuestion(graphContainer, q, qIdx);
+        } else if (q.type === 'circle') {
+          const container = document.createElement('div');
+          container.style.textAlign = 'center';
+          block.appendChild(container);
+          drawCircleCanvas(container, q, qIdx, q.points);
+        } else if (q.type === 'circlePoints') {
+          const container = document.createElement('div');
+          container.style.textAlign = 'center';
+          block.appendChild(container);
+          drawCircleCanvas(container, q, qIdx, q.points);
+        } else if (q.type === 'checkbox') {
+          const div = document.createElement('div');
+          div.className = 'checkbox-group';
+          q.options.forEach((opt, optIdx) => {
+            const label = document.createElement('label');
+            label.innerHTML = `<input type="checkbox" name="q${qIdx}" value="${optIdx}"> ${opt}`;
+            div.appendChild(label);
+          });
+          block.appendChild(div);
+          // обработчик сохраняет массив выбранных индексов
+          const checkboxes = div.querySelectorAll('input');
+          checkboxes.forEach(cb => {
+            cb.addEventListener('change', () => {
+              const selected = Array.from(checkboxes).filter(c => c.checked).map(c => parseInt(c.value));
+              studentAnswers[qIdx] = selected;
+            });
+          });
+        } else if (q.type === 'match') {
+          const div = document.createElement('div');
+          div.className = 'select-match';
+          q.pairs.forEach(pair => {
+            const span = document.createElement('span');
+            span.textContent = pair.label + ' → ';
+            const select = document.createElement('select');
+            select.innerHTML = q.options.map(opt => `<option value="${opt}">${opt}</option>`).join('');
+            select.addEventListener('change', () => {
+              studentAnswers[qIdx] = select.value;
+            });
+            div.appendChild(span);
+            div.appendChild(select);
+          });
+          block.appendChild(div);
+        } else if (q.type === 'matchMulti') {
+          const div = document.createElement('div');
+          q.pairs.forEach((pair, i) => {
+            const row = document.createElement('div');
+            row.className = 'select-match';
+            row.innerHTML = `<span>${pair.expr} → </span>`;
+            const select = document.createElement('select');
+            select.innerHTML = q.values.map(v => `<option value="${v}">${v}</option>`).join('');
+            select.addEventListener('change', () => {
+              if (!studentAnswers[qIdx]) studentAnswers[qIdx] = {};
+              studentAnswers[qIdx][i] = select.value;
+            });
+            row.appendChild(select);
+            div.appendChild(row);
+          });
+          block.appendChild(div);
+        } else if (q.type === 'numeric') {
+          const input = document.createElement('input');
+          input.type = 'number';
+          input.step = 'any';
+          input.style.padding = '0.5rem';
+          input.style.borderRadius = '1rem';
+          input.style.border = '1px solid #9b7ec4';
+          input.style.width = '150px';
+          input.addEventListener('input', () => {
+            studentAnswers[qIdx] = parseFloat(input.value);
+          });
+          block.appendChild(input);
         }
         questionsContainer.appendChild(block);
       });
     }
 
-    function showReviewModal(questions, answers) {
+    function showReviewModal(answers) {
       const overlay = document.createElement('div');
       overlay.className = 'modal-overlay';
       const modal = document.createElement('div');
@@ -664,34 +555,51 @@
       let html = `<h2>📋 Разбор ответов: ${currentStudentName}</h2>`;
 
       questions.forEach((q, idx) => {
-        const ans = answers[idx];
         let isCorrect = false;
         let userDisplay = '';
         let correctDisplay = '';
+        const ans = answers[idx];
 
-        if (q.type === 'matrix') {
+        if (q.type === 'choice') {
           const userIdx = ans;
-          if (userIdx !== null && userIdx !== undefined) {
-            userDisplay = '<div style="display:inline-block">'+renderMatrixTable(q.options[userIdx].matrix).outerHTML+'</div>';
-          } else {
-            userDisplay = '(нет ответа)';
-          }
-          correctDisplay = '<div style="display:inline-block">'+renderMatrixTable(q.options[q.correctIndex].matrix).outerHTML+'</div>';
-          isCorrect = (userIdx === q.correctIndex);
-        } else if (q.type === 'graph') {
-          if (ans && typeof ans.x === 'number') {
-            userDisplay = `(${ans.x.toFixed(3)}, ${ans.y.toFixed(3)})`;
-            isCorrect = Math.abs(ans.x - q.correctX) < q.tol && Math.abs(ans.y - q.correctY) < q.tol;
-          } else {
-            userDisplay = '(точка не выбрана)';
-          }
-          correctDisplay = `(${q.correctX.toFixed(3)}, ${q.correctY.toFixed(3)})`;
+          userDisplay = (userIdx !== null && userIdx !== undefined) ? q.options[userIdx] : '(нет ответа)';
+          correctDisplay = q.options[q.correct];
+          isCorrect = (userIdx === q.correct);
+        } else if (q.type === 'circle' || q.type === 'circlePoints') {
+          userDisplay = ans || '(не выбрано)';
+          correctDisplay = q.correctPoint;
+          isCorrect = (ans === q.correctPoint);
+        } else if (q.type === 'checkbox') {
+          const selected = ans || [];
+          userDisplay = selected.length ? selected.map(i => q.options[i]).join(', ') : '(нет)';
+          correctDisplay = q.correct.map(i => q.options[i]).join(', ');
+          isCorrect = selected.length === q.correct.length && selected.every(v => q.correct.includes(v));
+        } else if (q.type === 'match') {
+          userDisplay = ans || '(не выбрано)';
+          correctDisplay = q.pairs[0].correct;
+          isCorrect = (ans === correctDisplay);
+        } else if (q.type === 'matchMulti') {
+          const userObj = ans || {};
+          let userStr = '', correctStr = '';
+          q.pairs.forEach((p, i) => {
+            const u = userObj[i] || '?';
+            const c = p.correct;
+            userStr += `${p.expr}: ${u}; `;
+            correctStr += `${p.expr}: ${c}; `;
+          });
+          userDisplay = userStr;
+          correctDisplay = correctStr;
+          isCorrect = q.pairs.every((p, i) => userObj[i] === p.correct);
+        } else if (q.type === 'numeric') {
+          userDisplay = (ans !== null && !isNaN(ans)) ? ans.toString() : '(нет ответа)';
+          correctDisplay = q.correct.toString();
+          isCorrect = (Math.abs(ans - q.correct) < (q.tolerance || 0.01));
         }
 
         const borderClass = isCorrect ? 'correct-border' : 'wrong-border';
         const icon = isCorrect ? '✅' : '❌';
         html += `<div class="review-block ${borderClass}">`;
-        html += `<div class="review-question">${icon} ${idx+1}. ${q.text}</div>`;
+        html += `<div class="review-question">${icon} ${q.text}</div>`;
         html += `<div class="answer-line">👤 Ваш ответ: <strong>${userDisplay}</strong></div>`;
         if (!isCorrect) html += `<div class="answer-line">✅ Правильный: <strong>${correctDisplay}</strong></div>`;
         html += `</div>`;
@@ -715,8 +623,7 @@
         alert('Участник с таким ФИО уже проходил тест.'); return;
       }
       currentStudentName = name;
-      currentQuestions = prepareRandomVariant();
-      studentAnswers = new Array(currentQuestions.length).fill(null);
+      studentAnswers = new Array(questions.length).fill(null);
       testActive = true;
       studentPanel.classList.add('hidden');
       testSection.classList.remove('hidden');
@@ -728,31 +635,39 @@
 
     function submitStudentAttempt() {
       if (!testActive || !currentStudentName) return;
-      for (let i = 0; i < currentQuestions.length; i++) {
-        if (currentQuestions[i].type === 'matrix' && (studentAnswers[i] === null || studentAnswers[i] === undefined)) {
-          alert(`Ответьте на вопрос №${i+1}`); return;
+      // Проверка заполнения
+      for (let i = 0; i < questions.length; i++) {
+        const q = questions[i];
+        const ans = studentAnswers[i];
+        if (q.type === 'choice' && (ans === null || ans === undefined)) { alert(`Ответьте на вопрос А${i+1}`); return; }
+        if ((q.type === 'circle' || q.type === 'circlePoints') && !ans) { alert(`Выберите точку в вопросе А${i+1}`); return; }
+        if (q.type === 'checkbox' && (!ans || ans.length === 0)) { alert(`Выберите хотя бы один вариант в А${i+1}`); return; }
+        if (q.type === 'match' && !ans) { alert(`Выберите значение в А${i+1}`); return; }
+        if (q.type === 'matchMulti') {
+          const obj = ans || {};
+          if (Object.keys(obj).length < q.pairs.length) { alert(`Заполните все соответствия в А${i+1}`); return; }
         }
-        if (currentQuestions[i].type === 'graph' && !studentAnswers[i]) {
-          alert(`Выберите точку на графике в вопросе №${i+1}`); return;
-        }
+        if (q.type === 'numeric' && (ans === null || isNaN(ans))) { alert(`Введите число в В${i-9}`); return; }
       }
 
       let score = 0;
-      for (let i = 0; i < currentQuestions.length; i++) {
-        const q = currentQuestions[i];
-        if (q.type === 'matrix') {
-          if (studentAnswers[i] === q.correctIndex) score++;
-        } else if (q.type === 'graph') {
-          const ans = studentAnswers[i];
-          if (Math.abs(ans.x - q.correctX) < q.tol && Math.abs(ans.y - q.correctY) < q.tol) score++;
-        }
+      for (let i = 0; i < questions.length; i++) {
+        const q = questions[i];
+        const ans = studentAnswers[i];
+        if (q.type === 'choice' && ans === q.correct) score++;
+        else if ((q.type === 'circle' || q.type === 'circlePoints') && ans === q.correctPoint) score++;
+        else if (q.type === 'checkbox') {
+          if (ans.length === q.correct.length && ans.every(v => q.correct.includes(v))) score++;
+        } else if (q.type === 'match' && ans === q.pairs[0].correct) score++;
+        else if (q.type === 'matchMulti') {
+          if (q.pairs.every((p, i) => ans[i] === p.correct)) score++;
+        } else if (q.type === 'numeric' && Math.abs(ans - q.correct) < (q.tolerance || 0.01)) score++;
       }
 
-      showReviewModal(currentQuestions, studentAnswers);
-      allResults.push({ name: currentStudentName, score, total: currentQuestions.length });
+      showReviewModal(studentAnswers);
+      allResults.push({ name: currentStudentName, score, total: questions.length });
 
       testActive = false;
-      currentQuestions = [];
       studentAnswers = [];
       currentStudentName = "";
 
@@ -765,7 +680,7 @@
     function showFinalResults() {
       if (!allResults.length) { alert('Нет результатов'); return; }
       resultsContainer.classList.remove('hidden');
-      resultsContainer.innerHTML = '<h3 style="margin-bottom:1rem; color:#d4ece7;">🏆 Итоги группы</h3>';
+      resultsContainer.innerHTML = '<h3 style="margin-bottom:1rem; color:#e4d9f5;">🏆 Итоги группы</h3>';
       [...allResults].sort((a,b)=>a.name.localeCompare(b.name)).forEach((res, i) => {
         const div = document.createElement('div');
         div.className = 'result-entry';
